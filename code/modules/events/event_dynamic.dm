@@ -46,7 +46,7 @@
 	possibleEvents[/datum/event/trivial_news] = 300
 	possibleEvents[/datum/event/mundane_news] = 200
 
-	possibleEvents[/datum/event/pda_spam] = max(min(25, player_list.len) * 4, 200)
+	//possibleEvents[/datum/event/pda_spam] = max(min(25, player_list.len) * 4, 200)
 	possibleEvents[/datum/event/money_lotto] = max(min(5, player_list.len), 50)
 	if(account_hack_attempted)
 		possibleEvents[/datum/event/money_hacker] = max(min(25, player_list.len) * 4, 200)
