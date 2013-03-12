@@ -1260,4 +1260,9 @@
 #include "interface\interface.dm"
 #include "interface\skin.dmf"
 #include "maps\rsqstation.dmm"
+#include "maps\RandomZLevels\arcticwaste.dmm"
+#include "maps\RandomZLevels\beach.dmm"
+#include "maps\RandomZLevels\blackmarketpackers.dmm"
+#include "maps\RandomZLevels\jungle.dmm"
+#include "maps\RandomZLevels\listeningpost.dmm"
 // END_INCLUDE
