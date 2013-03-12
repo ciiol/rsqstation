@@ -70,8 +70,8 @@ var/blobevent = 0
 var/diary = null
 var/diaryofmeanpeople = null
 var/href_logfile = null
-var/station_name = "NSS Exodus"
-var/game_version = "Baystation12"
+var/station_name = "RSq Station (RU)"
+var/game_version = "Baystation12 custom modified"
 var/changelog_hash = ""
 
 var/datum/air_tunnel/air_tunnel1/SS13_airtunnel = null
