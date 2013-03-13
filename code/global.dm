@@ -70,7 +70,7 @@ var/blobevent = 0
 var/diary = null
 var/diaryofmeanpeople = null
 var/href_logfile = null
-var/station_name = "RSq Station (RU)"
+var/station_name = "RSq Station \[RU\] <img src=\"http://i.imgur.com/UqIeNlT.png\"> "
 var/game_version = "Baystation12 custom modified"
 var/changelog_hash = ""
 
