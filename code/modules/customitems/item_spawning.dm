@@ -6,7 +6,7 @@
 
 /proc/EquipCustomItems(mob/living/carbon/human/M)
 	// load lines
-	var/file = file2text("config/custom_items.txt")
+	var/file = file2text("[config_dir]/custom_items.txt")
 	var/lines = text2list(file, "\n")
 
 	for(var/line in lines)

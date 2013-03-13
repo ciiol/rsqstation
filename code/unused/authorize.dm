@@ -114,9 +114,9 @@ var/list/beta_tester_keylist
 
 /proc/beta_tester_loadfile()
 	beta_tester_keylist = new/list()
-	var/text = file2text("config/testers.txt")
+	var/text = file2text("[config_dir]/testers.txt")
 	if (!text)
-		diary << "Failed to load config/testers.txt\n"
+		diary << "Failed to load [config_dir]/testers.txt\n"
 	else
 		var/list/lines = dd_text2list(text, "\n")
 		for(var/line in lines)

@@ -14,9 +14,9 @@ var/list/whitelist = list()
 var/list/alien_whitelist = list()
 
 proc/load_alienwhitelist()
-	var/text = file2text("config/alienwhitelist.txt")
+	var/text = file2text("[config_dir]/alienwhitelist.txt")
 	if (!text)
-		diary << "Failed to load config/alienwhitelist.txt\n"
+		diary << "Failed to load [config_dir]/alienwhitelist.txt\n"
 	else
 		alien_whitelist = text2list(text, "\n")
 

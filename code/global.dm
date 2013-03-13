@@ -133,6 +133,7 @@ var/list/alldirs = list(NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAS
 
 var/datum/station_state/start_state = null
 var/datum/configuration/config = null
+var/datum/configuration/config_dir = null
 var/datum/sun/sun = null
 
 var/list/combatlog = list()

@@ -40,7 +40,7 @@ datum/controller/game_controller
 			job_master = new /datum/controller/occupations()
 			if(job_master.SetupOccupations())
 				world << "\red \b Job setup complete"
-				job_master.LoadJobs("config/jobs.txt")
+				job_master.LoadJobs("[config_dir]/jobs.txt")
 
 		world.tick_lag = config.Ticklag
 

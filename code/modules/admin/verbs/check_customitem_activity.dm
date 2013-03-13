@@ -36,7 +36,7 @@ var/inactive_keys = "None<br>"
 	//grab all ckeys associated with custom items
 	var/list/ckeys_with_customitems = list()
 
-	var/file = file2text("config/custom_items.txt")
+	var/file = file2text("[config_dir]/custom_items.txt")
 	var/lines = text2list(file, "\n")
 
 	for(var/line in lines)

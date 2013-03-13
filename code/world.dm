@@ -24,6 +24,8 @@
 
 	make_datum_references_lists()	//initialises global lists for referencing frequently used datums (so that we only ever do it once)
 
+
+	detect_configuration_dir()
 	load_configuration()
 	load_mode()
 	load_motd()
@@ -193,22 +195,29 @@
 	F << the_mode
 
 /world/proc/load_motd()
-	join_motd = file2text("config/motd.txt")
+	join_motd = file2text("[config_dir]/motd.txt")
+
+/world/proc/detect_configuration_dir()
+	if (fexists("config.local/"))
+		world.log << "Load configuration from config.local"
+		config_dir = "config.local"
+	else
+		config_dir = "config"
 
 /world/proc/load_configuration()
 	config = new /datum/configuration()
-	config.load("config/config.txt")
-	config.load("config/game_options.txt","game_options")
-	config.loadsql("config/dbconfig.txt")
-	config.loadforumsql("config/forumdbconfig.txt")
+	config.load("[config_dir]/config.txt")
+	config.load("[config_dir]/game_options.txt","game_options")
+	config.loadsql("[config_dir]/dbconfig.txt")
+	config.loadforumsql("[config_dir]/forumdbconfig.txt")
 	// apply some settings from config..
 	abandon_allowed = config.respawn
 
 /world/proc/load_mods()
 	if(config.admin_legacy_system)
-		var/text = file2text("config/moderators.txt")
+		var/text = file2text("[config_dir]/moderators.txt")
 		if (!text)
-			diary << "Failed to load config/mods.txt\n"
+			diary << "Failed to load [config_dir]/mods.txt\n"
 		else
 			var/list/lines = text2list(text, "\n")
 			for(var/line in lines)
