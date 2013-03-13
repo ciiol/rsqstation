@@ -111,27 +111,26 @@ proc/tg_list2text(list/list, glue=",")
 //Converts a text string into a list by splitting the string at each seperator found in text (discarding the seperator)
 //Returns an empty list if the text cannot be split, or the split text in a list.
 //Not giving a "" seperator will cause the text to be broken into a list of single letters.
-/proc/text2list(text, seperator="\n")
-	. = list()
-
-	var/text_len = length(text)					//length of the input text
-	var/seperator_len = length(seperator)		//length of the seperator text
-
-	if(text_len >= seperator_len)
-		var/i
-		var/last_i = 1
-
-		for(i=1,i<=(text_len+1-seperator_len),i++)
-			if( cmptext(copytext(text,i,i+seperator_len), seperator) )
-				if(i != last_i)
-					. += copytext(text,last_i,i)
-				last_i = i + seperator_len
-
-		if(last_i <= text_len)
-			. += copytext(text, last_i, 0)
-	else
-		. += text
+/proc/text2list(text, separator="\n", var/list/withinList)
+	var/textlength = length(text)
+	var/separatorlength = length(separator)
+	if(withinList && !withinList.len) withinList = null
+	var/list/textList = new()
+	var/searchPosition = 1
+	var/findPosition = 1
+	var/loops = 999
+	while(loops) //Byond will think 1000+ iterations of a loop is an infinite loop
+		findPosition = findtext(text, separator, searchPosition, 0)
+		var/buggyText = copytext(text, searchPosition, findPosition)
+		if(!withinList || (buggyText in withinList)) textList += "[buggyText]"
+		if(!findPosition) return textList
+		searchPosition = findPosition + separatorlength
+		if(searchPosition > textlength)
+			textList += ""
+			return textList
+		loops--
 	return .
+
 
 //Converts a text string into a list by splitting the string at each seperator found in text (discarding the seperator)
 //Returns an empty list if the text cannot be split, or the split text in a list.
