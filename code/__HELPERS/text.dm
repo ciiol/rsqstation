@@ -45,17 +45,17 @@
 
 //Runs byond's sanitization proc along-side sanitize_simple
 /proc/sanitize(var/t,var/list/repl_chars = null, unicode = 0)
-		t = html_encode(sanitize_simple(t,repl_chars))
-		var/index = findtext(t, "____255;")
-		if(unicode)
-			while(index)
-				t = copytext(t, 1, index) + "ÿ" + copytext(t, index+8)
-				index = findtext(t, "____255;")
-		else
-			while(index)
-				t = copytext(t, 1, index) + "y" + copytext(t, index+8)
-				index = findtext(t, "____255;")
-		return t
+	t = html_encode(sanitize_simple(t,repl_chars))
+	var/index = findtext(t, "____255;")
+	if(unicode)
+		while(index)
+			t = copytext(t, 1, index) + "ÿ" + copytext(t, index+8)
+			index = findtext(t, "____255;")
+	else
+		while(index)
+			t = copytext(t, 1, index) + "y" + copytext(t, index+8)
+			index = findtext(t, "____255;")
+	return t
 //Runs sanitize and strip_html_simple
 //I believe strip_html_simple() is required to run first to prevent '<' from displaying as '&lt;' after sanitize() calls byond's html_encode()
 /proc/strip_html(var/t,var/limit=MAX_MESSAGE_LEN)
