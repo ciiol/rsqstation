@@ -12,12 +12,12 @@
 	announceWhen = rand(announceWhen, announceWhen + 50)
 	spawncount = rand(1, 2)
 	sent_aliens_to_station = 1
-
+/*
 /datum/event/alien_infestation/announce()
 	if(successSpawn)
 		command_alert("Unidentified lifesigns detected coming aboard [station_name()]. Secure any exterior access, including ducting and ventilation.", "Lifesign Alert")
 		world << sound('sound/AI/aliens.ogg')
-
+*/
 
 /datum/event/alien_infestation/start()
 	var/list/vents = list()

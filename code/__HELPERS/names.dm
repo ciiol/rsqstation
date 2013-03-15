@@ -45,7 +45,7 @@ var/religion_name = null
 
 /proc/station_name()
 	if (station_name)
-		return station_name
+		return "RSq Station"
 
 	var/random = rand(1,5)
 	var/name = ""

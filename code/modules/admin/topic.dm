@@ -2086,13 +2086,35 @@
 			if("spacevines")
 				feedback_inc("admin_secrets_fun_used",1)
 				feedback_add_details("admin_secrets_fun_used","K")
-				//new /datum/event/spacevine
+				new /datum/event/spacevine
 				message_admins("[key_name_admin(usr)] has spawned spacevines", 1)
 			if("onlyone")
 				feedback_inc("admin_secrets_fun_used",1)
 				feedback_add_details("admin_secrets_fun_used","OO")
 				usr.client.only_one()
-//				message_admins("[key_name_admin(usr)] has triggered a battle to the death (only one)")
+				message_admins("[key_name_admin(usr)] has triggered a battle to the death (only one)")
+			if ("goblob")
+				new /datum/event/blob
+				message_admins("[key_name_admin(usr)] has spawned blob", 1)
+			if ("aliens")
+				new /datum/event/alien_infestation
+				message_admins("[key_name_admin(usr)] has triggered alien infestation", 1)
+				var/aliens_announce = alert(usr, "Show announce message?", "Message", "Yes", "No")
+				if(aliens_announce == "Yes")
+					command_alert("Unidentified lifesigns detected coming aboard [station_name()]. Secure any exterior access, including ducting and ventilation.", "Lifesign Alert")
+					world << sound('sound/AI/aliens.ogg')
+			if ("spiders")
+				new /datum/event/spider_infestation
+				message_admins("[key_name_admin(usr)] has triggered spiders infestation", 1)
+			if ("carp")
+				new /datum/event/carp_migration
+				message_admins("[key_name_admin(usr)] has triggered carp migration", 1)
+			if ("radiation")
+				new /datum/event/radiation_storm
+				message_admins("[key_name_admin(usr)] has triggered radiation storm", 1)
+			if ("comms_blackout")
+				new /datum/event/communications_blackout
+				message_admins("[key_name_admin(usr)] has triggered radiation storm", 1)
 		if(usr)
 			log_admin("[key_name(usr)] used secret [href_list["secretsfun"]]")
 			if (ok)

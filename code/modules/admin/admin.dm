@@ -536,7 +536,6 @@ var/global/floorIsLava = 0
 			<A href='?src=\ref[src];secretsfun=timeanomalies'>Spawn wormholes</A><BR>
 			<A href='?src=\ref[src];secretsfun=goblob'>Spawn blob</A><BR>
 			<A href='?src=\ref[src];secretsfun=aliens'>Trigger an Alien infestation</A><BR>
-			<A href='?src=\ref[src];secretsfun=alien_silent'>Spawn an Alien silently</A><BR>
 			<A href='?src=\ref[src];secretsfun=spiders'>Trigger a Spider infestation</A><BR>
 			<A href='?src=\ref[src];secretsfun=spaceninja'>Send in a space ninja</A><BR>
 			<A href='?src=\ref[src];secretsfun=striketeam'>Send in a strike team</A><BR>
@@ -568,7 +567,6 @@ var/global/floorIsLava = 0
 			<A href='?src=\ref[src];secretsfun=onlyone'>There can only be one!</A><BR>
 			<A href='?src=\ref[src];secretsfun=flicklights'>Ghost Mode</A><BR>
 			<A href='?src=\ref[src];secretsfun=retardify'>Make all players retarded</A><BR>
-			<A href='?src=\ref[src];secretsfun=fakeguns'>Make all items look like guns</A><BR>
 			<A href='?src=\ref[src];secretsfun=schoolgirl'>Japanese Animes Mode</A><BR>
 			<A href='?src=\ref[src];secretsfun=eagles'>Egalitarian Station Mode</A><BR>
 			<A href='?src=\ref[src];secretsfun=moveadminshuttle'>Move Administration Shuttle</A><BR>
@@ -578,7 +576,6 @@ var/global/floorIsLava = 0
 			<A href='?src=\ref[src];secretsfun=blackout'>Break all lights</A><BR>
 			<A href='?src=\ref[src];secretsfun=whiteout'>Fix all lights</A><BR>
 			<A href='?src=\ref[src];secretsfun=friendai'>Best Friend AI</A><BR>
-			<A href='?src=\ref[src];secretsfun=floorlava'>The floor is lava! (DANGEROUS: extremely lame)</A><BR>
 			"}
 
 	if(check_rights(R_SERVER,0))
