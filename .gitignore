@@ -4,5 +4,5 @@
 *.dmb
 *.lk
 info.json
-
+statistics/
 config.local/
