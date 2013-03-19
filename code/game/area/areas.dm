@@ -61,6 +61,30 @@
 						a.triggerAlarm("Power", src, cameras, source)
 	return
 
+/area/proc/close_firedoors()
+	for(var/obj/machinery/door/firedoor/D in all_doors)
+		if(!D.welded)
+			if(D.operating)
+				D.nextstate = CLOSED
+			else if(!D.density)
+				spawn()
+					D.close()
+
+/area/proc/open_firedoors()
+	for(var/obj/machinery/door/firedoor/D in all_doors)
+		if(!D.welded)
+			if(D.operating)
+				D.nextstate = OPEN
+			else if(D.density)
+				spawn(0)
+					D.open()
+
+/area/proc/autoblock()
+	if (atmosalm==2 || fire==1)
+		close_firedoors()
+	else
+		open_firedoors()
+
 /area/proc/atmosalert(danger_level)
 //	if(type==/area) //No atmos alarms in space
 //		return 0 //redudant
@@ -83,6 +107,7 @@
 			for(var/obj/machinery/computer/station_alert/a in world)
 				a.cancelAlarm("Atmosphere", src, src)
 		atmosalm = danger_level
+		autoblock()
 		return 1
 	return 0
 
@@ -93,13 +118,7 @@
 		fire = 1
 		updateicon()
 		mouse_opacity = 0
-		for(var/obj/machinery/door/firedoor/D in all_doors)
-			if(!D.blocked)
-				if(D.operating)
-					D.nextstate = CLOSED
-				else if(!D.density)
-					spawn()
-						D.close()
+		autoblock()
 		var/list/cameras = list()
 		for (var/obj/machinery/camera/C in src)
 			cameras += C
@@ -113,13 +132,7 @@
 		fire = 0
 		mouse_opacity = 0
 		updateicon()
-		for(var/obj/machinery/door/firedoor/D in all_doors)
-			if(!D.blocked)
-				if(D.operating)
-					D.nextstate = OPEN
-				else if(D.density)
-					spawn(0)
-					D.open()
+		autoblock()
 		for (var/mob/living/silicon/ai/aiPlayer in player_list)
 			aiPlayer.cancelAlarm("Fire", src, src)
 		for (var/obj/machinery/computer/station_alert/a in world)
@@ -154,7 +167,7 @@
 		mouse_opacity = 0
 		updateicon()
 		for(var/obj/machinery/door/firedoor/D in src)
-			if(!D.blocked)
+			if(!D.welded)
 				if(D.operating)
 					D.nextstate = OPEN
 				else if(D.density)
