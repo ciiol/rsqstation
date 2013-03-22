@@ -56,7 +56,6 @@
 	//get message text, limit it's length.and clean/escape html
 	if(!msg)
 		msg = input(src,"Message:", "Private message to [C.key]") as text|null
-		msg = replacetext(msg, "ÿ", "&#255;")
 
 		if(!msg)	return
 		if(!C)
@@ -71,6 +70,9 @@
 	if(!check_rights(R_SERVER|R_DEBUG,0))
 		msg = sanitize(copytext(msg,1,MAX_MESSAGE_LEN))
 		if(!msg)	return
+	else
+		// and just fix ya letter if it's admin message
+		msg = replacetext(msg, "ÿ", "&#255;")
 
 	var/recieve_color = "purple"
 	var/send_pm_type = " "
