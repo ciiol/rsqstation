@@ -889,6 +889,10 @@ proc/process_ghost_teleport_locs()
 		name = "Engineering"
 		icon_state = "engine_smes"
 
+	singularity
+		name = "Engineering singularity"
+		icon_state = "engine_singo"
+
 	break_room
 		name = "\improper Engineering Foyer"
 		icon_state = "engine"
