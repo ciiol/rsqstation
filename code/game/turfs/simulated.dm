@@ -40,7 +40,7 @@
 					if ((M.m_intent == "run") && !(istype(M:shoes, /obj/item/clothing/shoes) && M:shoes.flags&NOSLIP))
 						M.stop_pulling()
 						step(M, M.dir)
-						M << "\blue You slipped on the wet floor!"
+						M << "\blue You slipped on the floor!"
 						playsound(src.loc, 'sound/misc/slip.ogg', 50, 1, -3)
 						M.Stun(8)
 						M.Weaken(5)
@@ -51,7 +51,7 @@
 					if (M.m_intent == "run")
 						M.stop_pulling()
 						step(M, M.dir)
-						M << "\blue You slipped on the wet floor!"
+						M << "\blue You slipped on the floor!"
 						playsound(src.loc, 'sound/misc/slip.ogg', 50, 1, -3)
 						M.Stun(8)
 						M.Weaken(5)

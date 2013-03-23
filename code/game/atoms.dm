@@ -473,6 +473,8 @@ its easier to just keep the beam vertical.
 
 		//if there isn't a blood decal already, make one.
 		var/obj/effect/decal/cleanable/blood/newblood = new /obj/effect/decal/cleanable/blood(T)
+		// make floor wet
+		T.wet=1
 		newblood.blood_DNA[M.dna.unique_enzymes] = M.dna.b_type
 		/*for(var/datum/disease/D in M.viruses)
 			var/datum/disease/newDisease = D.Copy(1)
@@ -510,6 +512,7 @@ its easier to just keep the beam vertical.
 		if( istype(src, /turf/simulated) )
 			var/turf/simulated/source1 = src
 			var/obj/effect/decal/cleanable/blood/this = new /obj/effect/decal/cleanable/blood(source1)
+			source1.wet=1
 			this.blood_DNA[M.dna.unique_enzymes] = M.dna.b_type
 			/*for(var/datum/disease/D in M.viruses)
 				var/datum/disease/newDisease = D.Copy(1)
@@ -520,6 +523,7 @@ its easier to just keep the beam vertical.
 		if( istype(src, /turf/simulated) )
 			var/turf/simulated/source2 = src
 			var/obj/effect/decal/cleanable/xenoblood/this = new /obj/effect/decal/cleanable/xenoblood(source2)
+			source2.wet=1
 			this.blood_DNA["UNKNOWN BLOOD"] = "X*"
 			/*for(var/datum/disease/D in M.viruses)
 				var/datum/disease/newDisease = D.Copy(1)
@@ -529,14 +533,16 @@ its easier to just keep the beam vertical.
 	else if( istype(M, /mob/living/silicon/robot ))
 		if( istype(src, /turf/simulated) )
 			var/turf/simulated/source2 = src
+			source2.wet=1
 			new /obj/effect/decal/cleanable/oil(source2)
 
 /atom/proc/clean_blood()
 	src.germ_level = 0
+	if( istype(src, /turf/simulated) )
+		src:wet=0
 	if(istype(blood_DNA, /list))
 		del(blood_DNA)
 		return 1
-
 
 
 /atom/MouseDrop(atom/over_object as mob|obj|turf|area)
