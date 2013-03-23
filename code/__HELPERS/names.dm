@@ -44,9 +44,6 @@ var/religion_name = null
 	return capitalize(name)
 
 /proc/station_name()
-	if (station_name)
-		return "RSq Station"
-
 	var/random = rand(1,5)
 	var/name = ""
 
