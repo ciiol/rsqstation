@@ -118,7 +118,10 @@ datum/light_source
 
 
 	proc/lum(turf/A)
-		return owner.luminosity - max(abs(A.x-__x),abs(A.y-__y))
+		//var distance = cheap_hypotenuse(A.x,A.y,__x,__y) // we can use euclidean metric
+		var distance = max(abs(A.x-__x),abs(A.y-__y)) // but manhattan distance looks more pretty
+		var magic_constant = 0.33
+		return owner.luminosity-round(distance*distance*magic_constant)
 //		var/dist = cheap_hypotenuse(A.x,A.y,__x,__y) //fetches the pythagorean distance between A and the light
 //		if(owner.luminosity < dist)	//if the turf is outside the radius the light doesn't illuminate it
 //			return 0
