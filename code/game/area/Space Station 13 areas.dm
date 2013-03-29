@@ -132,7 +132,7 @@ proc/process_ghost_teleport_locs()
 /area/shuttle/arrival
 	name = "\improper Arrival Shuttle"
 
-/area/shuttle/arrival/pre_game
+/area/shuttle/arrival/ship
 	icon_state = "shuttle2"
 
 /area/shuttle/arrival/station
@@ -349,6 +349,9 @@ proc/process_ghost_teleport_locs()
 
 /area/centcom/shuttle
 	name = "\improper Centcom Administration Shuttle"
+
+/area/centcom/arrival_ship
+	name = "\improper Centcom Arrival Ship"
 
 /area/centcom/test
 	name = "\improper Centcom Testing Facility"
