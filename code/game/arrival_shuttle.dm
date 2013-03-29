@@ -4,7 +4,7 @@
 
 var/arrival_shuttle_tickstomove = 10
 var/arrival_shuttle_moving = 0
-var/arrival_shuttle_location = 0 // 0 = station 13, 1 = arrival station
+var/arrival_shuttle_location = 1 // 0 = station 13, 1 = arrival station
 
 proc/move_arrival_shuttle()
 	if(arrival_shuttle_moving)	return
@@ -63,7 +63,6 @@ proc/move_arrival_shuttle()
 	icon_state = "shuttle"
 	req_access = list()
 	var/hacked = 0
-	var/location = 0 //0 = station, 1 = master ship
 
 /obj/machinery/computer/arrival_shuttle/ship
 	name = "Arrival Shuttle Ship Console"
@@ -74,16 +73,16 @@ proc/move_arrival_shuttle()
 /obj/machinery/computer/arrival_shuttle/ship/attack_hand(user as mob)
 	src.add_fingerprint(usr)
 	var/dat = "<center>arrival shuttle: <b><A href='?src=\ref[src];move=1'>Send</A></b></center><br>"
-	user << browse("[dat]", "window=arrivalshuttle;size=200x100")
+	user << browse("[dat]", "window=arrivalshuttle;size=250x150")
 
-/obj/machinery/computer/arrival_shuttle/ship/attack_hand(user as mob)
+/obj/machinery/computer/arrival_shuttle/shuttle/attack_hand(user as mob)
 	src.add_fingerprint(usr)
 	var/dat
-	if (location == 1) // If at ship
+	if (arrival_shuttle_location == 1) // If at ship
 		dat = "<center>arrival shuttle: <b><A href='?src=\ref[src];move=1'>Send</A></b></center><br>"
 	else
 		dat = "<center>Shuttle is waiting commands from the master ship</center><br>"
-	user << browse("[dat]", "window=arrivalshuttle;size=200x100")
+	user << browse("[dat]", "window=arrivalshuttle;size=250x150")
 
 /obj/machinery/computer/arrival_shuttle/Topic(href, href_list)
 	if(..())
