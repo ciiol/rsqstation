@@ -19,6 +19,9 @@ proc/move_arrival_shuttle()
 			fromArea = locate(/area/shuttle/arrival/station)
 			toArea = locate(/area/shuttle/arrival/ship)
 
+		for(var/obj/machinery/door/D in fromArea)
+			spawn(0)
+				D.close()
 
 		var/list/dstturfs = list()
 		var/throwy = world.maxy
@@ -51,7 +54,7 @@ proc/move_arrival_shuttle()
 		fromArea.move_contents_to(toArea)
 		if (arrival_shuttle_location)
 			arrival_shuttle_location = 0
-			spawn(60)
+			spawn(arrival_shuttle_tickstomove*40)
 				if (!arrival_shuttle_moving && !arrival_shuttle_location)
 					move_arrival_shuttle()
 		else
