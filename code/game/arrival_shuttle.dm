@@ -52,7 +52,7 @@ proc/move_arrival_shuttle()
 		if (arrival_shuttle_location)
 			arrival_shuttle_location = 0
 			spawn(60)
-				if (!arrival_shuttle_moving && arrival_shuttle_location)
+				if (!arrival_shuttle_moving && !arrival_shuttle_location)
 					move_arrival_shuttle()
 		else
 			arrival_shuttle_location = 1
@@ -72,14 +72,14 @@ proc/move_arrival_shuttle()
 
 /obj/machinery/computer/arrival_shuttle/ship/attack_hand(user as mob)
 	src.add_fingerprint(usr)
-	var/dat = "<center>arrival shuttle: <b><A href='?src=\ref[src];move=1'>Send</A></b></center><br>"
+	var/dat = "<center>Arrival shuttle: <b><A href='?src=\ref[src];move=1'>Send</A></b></center><br>"
 	user << browse("[dat]", "window=arrivalshuttle;size=250x150")
 
 /obj/machinery/computer/arrival_shuttle/shuttle/attack_hand(user as mob)
 	src.add_fingerprint(usr)
 	var/dat
 	if (arrival_shuttle_location == 1) // If at ship
-		dat = "<center>arrival shuttle: <b><A href='?src=\ref[src];move=1'>Send</A></b></center><br>"
+		dat = "<center>Arrival shuttle: <b><A href='?src=\ref[src];move=1'>Send</A></b></center><br>"
 	else
 		dat = "<center>Shuttle is waiting commands from the master ship</center><br>"
 	user << browse("[dat]", "window=arrivalshuttle;size=250x150")

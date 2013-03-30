@@ -338,6 +338,7 @@ obj/machinery/atmospherics/pipe
 		desc = "A large vessel containing pressurized gas."
 
 		volume = 2000 //in liters, 1 meters by 1 meters by 2 meters
+		var/initial_pressure = 60
 
 		dir = SOUTH
 		initialize_directions = SOUTH
@@ -370,7 +371,7 @@ obj/machinery/atmospherics/pipe
 				air_temporary.volume = volume
 				air_temporary.temperature = T20C
 
-				air_temporary.carbon_dioxide = (25*ONE_ATMOSPHERE)*(air_temporary.volume)/(R_IDEAL_GAS_EQUATION*air_temporary.temperature)
+				air_temporary.carbon_dioxide = (initial_pressure*ONE_ATMOSPHERE)*(air_temporary.volume)/(R_IDEAL_GAS_EQUATION*air_temporary.temperature)
 
 				..()
 
@@ -383,7 +384,7 @@ obj/machinery/atmospherics/pipe
 				air_temporary.volume = volume
 				air_temporary.temperature = T20C
 
-				air_temporary.toxins = (25*ONE_ATMOSPHERE)*(air_temporary.volume)/(R_IDEAL_GAS_EQUATION*air_temporary.temperature)
+				air_temporary.toxins = (initial_pressure*ONE_ATMOSPHERE)*(air_temporary.volume)/(R_IDEAL_GAS_EQUATION*air_temporary.temperature)
 
 				..()
 
@@ -397,7 +398,7 @@ obj/machinery/atmospherics/pipe
 				air_temporary.temperature = T0C
 
 				var/datum/gas/oxygen_agent_b/trace_gas = new
-				trace_gas.moles = (25*ONE_ATMOSPHERE)*(air_temporary.volume)/(R_IDEAL_GAS_EQUATION*air_temporary.temperature)
+				trace_gas.moles = (initial_pressure*ONE_ATMOSPHERE)*(air_temporary.volume)/(R_IDEAL_GAS_EQUATION*air_temporary.temperature)
 
 				air_temporary.trace_gases += trace_gas
 
@@ -412,7 +413,7 @@ obj/machinery/atmospherics/pipe
 				air_temporary.volume = volume
 				air_temporary.temperature = T20C
 
-				air_temporary.oxygen = (25*ONE_ATMOSPHERE)*(air_temporary.volume)/(R_IDEAL_GAS_EQUATION*air_temporary.temperature)
+				air_temporary.oxygen = (initial_pressure*ONE_ATMOSPHERE)*(air_temporary.volume)/(R_IDEAL_GAS_EQUATION*air_temporary.temperature)
 
 				..()
 
@@ -425,7 +426,7 @@ obj/machinery/atmospherics/pipe
 				air_temporary.volume = volume
 				air_temporary.temperature = T20C
 
-				air_temporary.nitrogen = (25*ONE_ATMOSPHERE)*(air_temporary.volume)/(R_IDEAL_GAS_EQUATION*air_temporary.temperature)
+				air_temporary.nitrogen = (initial_pressure*ONE_ATMOSPHERE)*(air_temporary.volume)/(R_IDEAL_GAS_EQUATION*air_temporary.temperature)
 
 				..()
 
@@ -527,7 +528,7 @@ obj/machinery/atmospherics/pipe
 		var/build_killswitch = 1
 
 		var/obj/machinery/atmospherics/node1
-		New()		
+		New()
 			initialize_directions = dir
 			..()
 
@@ -722,7 +723,7 @@ obj/machinery/atmospherics/pipe
 
 				icon_state = "manifold_[connected]_[unconnected]"
 
-				if(!connected) 
+				if(!connected)
 					del(src)
 
 			return
@@ -951,7 +952,7 @@ obj/machinery/atmospherics/pipe
 			return
 
 		initialize()
-			
+
 			for(var/obj/machinery/atmospherics/target in get_step(src,1))
 				if(target.initialize_directions & 2)
 					node1 = target
@@ -1028,7 +1029,7 @@ obj/machinery/atmospherics/pipe
 	manifold4w/general/hidden
 		level = 1
 		icon_state = "manifold4w-f"
-		
+
 	cap
 		name = "pipe endcap"
 		desc = "An endcap for pipes"
@@ -1138,7 +1139,7 @@ obj/machinery/atmospherics/pipe/attackby(var/obj/item/weapon/W as obj, var/mob/u
 		user << "\red You paint the pipe yellow."
 		update_icon()
 		return 1
-    
+
 	if (!istype(W, /obj/item/weapon/wrench))
 		return ..()
 	var/turf/T = src.loc
