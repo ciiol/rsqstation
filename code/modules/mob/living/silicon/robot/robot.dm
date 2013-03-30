@@ -247,6 +247,24 @@
 	viewalerts = 1
 	src << browse(dat, "window=robotalerts&can_close=0")
 
+/mob/living/silicon/robot/verb/cmd_robot_manifest()
+	set category = "Robot Commands"
+	set name = "Show Crew Manifest"
+	robot_manifest()
+
+/mob/living/silicon/robot/proc/robot_manifest()
+	var/dat = "<html><head><title>Crew Roster</title></head><body><b>Crew Roster:</b><br><br>"
+
+	dat = "<h4>Crew Manifest</h4>"
+	if(data_core)
+		dat += data_core.get_manifest(1) // make it monochrome
+	dat += "<br>"
+
+	dat += "</body></html>"
+
+	src << browse(dat, "window=airoster")
+	onclose(src, "airoster")
+
 /mob/living/silicon/robot/blob_act()
 	if (stat != 2)
 		adjustBruteLoss(60)

@@ -412,16 +412,17 @@
 // Crew Manifest
 /mob/living/silicon/pai/proc/softwareManifest()
 	var/dat = ""
-	dat += "<h2>Crew Manifest</h2><br><br>"
-	var/list/L = list()
-	if(!isnull(data_core.general))
-		for (var/datum/data/record/t in sortRecord(data_core.general))
-			var/R = t.fields["name"] + " - " + t.fields["rank"]
-			L += R
-	for(var/R in sortList(L))
-		dat += "[R]<br>"
+
+	dat = "<h4>Crew Manifest</h4>"
+	if(data_core)
+		dat += data_core.get_manifest(1) // make it monochrome
+	dat += "<br>"
+
 	dat += "</body></html>"
-	return dat
+
+	src << browse(dat, "window=airoster")
+	onclose(src, "airoster")
+
 
 // Medical Records
 /mob/living/silicon/pai/proc/softwareMedicalRecord()
