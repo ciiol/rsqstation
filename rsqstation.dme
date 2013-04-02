@@ -1308,6 +1308,6 @@
 #include "code\ZAS\ZAS_Zones.dm"
 #include "interface\interface.dm"
 #include "interface\skin.dmf"
-#include "maps\rsqstation.dmm"
+#include "maps\rsqstation 2.0.0.dmm"
 #include "maps\RandomZLevels\beach.dmm"
 // END_INCLUDE
