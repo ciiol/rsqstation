@@ -325,7 +325,7 @@ datum/mind
 		out += "<br>"
 
 		out += "<b>Memory:</b><br>"
-		out += memory
+		out += fix_russian(memory,1)
 		out += "<br><a href='?src=\ref[src];memory_edit=1'>Edit memory</a><br>"
 		out += "Objectives:<br>"
 		if (objectives.len == 0)
@@ -333,7 +333,7 @@ datum/mind
 		else
 			var/obj_count = 1
 			for(var/datum/objective/objective in objectives)
-				out += "<B>[obj_count]</B>: [objective.explanation_text] <a href='?src=\ref[src];obj_edit=\ref[objective]'>Edit</a> <a href='?src=\ref[src];obj_delete=\ref[objective]'>Delete</a> <a href='?src=\ref[src];obj_completed=\ref[objective]'><font color=[objective.completed ? "green" : "red"]>Toggle Completion</font></a><br>"
+				out += "<B>[obj_count]</B>: [fix_russian(objective.explanation_text,1)] <a href='?src=\ref[src];obj_edit=\ref[objective]'>Edit</a> <a href='?src=\ref[src];obj_delete=\ref[objective]'>Delete</a> <a href='?src=\ref[src];obj_completed=\ref[objective]'><font color=[objective.completed ? "green" : "red"]>Toggle Completion</font></a><br>"
 				obj_count++
 		out += "<a href='?src=\ref[src];obj_add=1'>Add objective</a><br><br>"
 
@@ -900,7 +900,7 @@ datum/mind
 			var/obj_count = 1
 			current << "\blue Your current objectives:"
 			for(var/datum/objective/objective in objectives)
-				current << "<B>Objective #[obj_count]</B>: [objective.explanation_text]"
+				current << "<B>Objective #[obj_count]</B>: [fix_russian(objective.explanation_text)]"
 				obj_count++
 
 		edit_memory()

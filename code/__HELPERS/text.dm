@@ -34,6 +34,19 @@
 			index = findtext(t, char)
 	return t
 
+/proc/fix_russian(var/t, unicode = 0)
+	var/problem_letters
+	if(!unicode)
+		problem_letters = list("ÿ"="&#255;")
+	else
+		problem_letters = list("ÿ"="&#1103;")
+	for(var/char in problem_letters)
+		var/index = findtext(t, char)
+		while(index)
+			t = copytext(t, 1, index) + problem_letters[char] + copytext(t, index+1)
+			index = findtext(t, char)
+	return t
+
 //Removes a few problematic characters
 /proc/sanitize_simple(var/t,var/list/repl_chars = list("\n"="#","\t"="#","ÿ"="____255;"))
 	for(var/char in repl_chars)
@@ -49,7 +62,7 @@
 	var/index = findtext(t, "____255;")
 	if(unicode)
 		while(index)
-			t = copytext(t, 1, index) + "y" + copytext(t, index+8)
+			t = copytext(t, 1, index) + "&#1103;" + copytext(t, index+8)
 			index = findtext(t, "____255;")
 	else
 		while(index)
