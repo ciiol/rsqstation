@@ -13,6 +13,9 @@ var/global/floorIsLava = 0
 
 /proc/msg_admin_attack(var/text) //Toggleable Attack Messages
 	var/rendered = "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> <span class=\"message\">[text]</span></span>"
+	if (usr)
+		var/turf/T = get_turf(usr)
+		rendered = "<span class=\"admin\"><span class=\"prefix\">ADMIN LOG:</span> (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[T.x];Y=[T.y];Z=[T.z]'>JMP</A>) <span class=\"message\">[text]</span></span>"
 	log_adminwarn(rendered)
 	for(var/client/C in admins)
 		if(R_ADMIN & C.holder.rights)
