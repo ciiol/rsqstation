@@ -75,8 +75,7 @@
 			C.netnum = PN.number
 			PN.cables += C
 
-			C.mergeConnectedNetworks(C.d2)
-			C.mergeConnectedNetworksOnTurf()
+			C.merge_connected_networks(C.d2)
 
 	else
 		icon_state = icon_state_off
