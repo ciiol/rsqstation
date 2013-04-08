@@ -4,16 +4,17 @@
 		command_alert("Abnormal activity detected in [station_name()]'s powernet. As a precautionary measure, the station's power will be shut off for an indeterminate duration.", "Critical Power Failure")
 		for(var/mob/M in player_list)
 			M << sound('sound/AI/poweroff.ogg')
+
+	var/list/skipped_areas = list(/area/engine/singularity, /area/turret_protected/ai)
+
 	for(var/obj/machinery/power/smes/S in world)
-		if(istype(get_area(S), /area/turret_protected) || S.z != 1)
+		if(istype(get_area(S) in skipped_areas) || S.z != 1)
 			continue
 		S.charge = 0
 		S.output = 0
 		S.online = 0
 		S.updateicon()
 		S.power_change()
-
-	var/list/skipped_areas = list(/area/engine/engineering, /area/turret_protected/ai)
 
 	for(var/area/A in world)
 		if( !A.requires_power || A.always_unpowered )
