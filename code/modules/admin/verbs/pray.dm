@@ -21,6 +21,7 @@
 
 	for(var/client/C in admins)
 		if(C.prefs.toggles & CHAT_PRAYER)
+			C << 'sound/effects/adminhelp.ogg'
 			C << msg
 	usr << "Your prayers have been received by the gods."
 
