@@ -567,6 +567,7 @@ proc/process_ghost_teleport_locs()
 /area/prison/solitary
 	name = "Solitary Confinement"
 	icon_state = "brig"
+	requires_power = 0
 
 /area/prison/cell_block/A
 	name = "Prison Cell Block A"

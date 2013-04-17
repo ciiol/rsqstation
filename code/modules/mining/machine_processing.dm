@@ -7,12 +7,12 @@
 	density = 1
 	anchored = 1
 	var/obj/machinery/mineral/processing_unit/machine = null
-	var/machinedir = EAST
+	var/max_machine_distance = 10
 
 /obj/machinery/mineral/processing_unit_console/New()
 	..()
 	spawn(7)
-		src.machine = locate(/obj/machinery/mineral/processing_unit, get_step(src, machinedir))
+		src.machine = locate(/obj/machinery/mineral/processing_unit, range(max_machine_distance, src))
 		if (machine)
 			machine.CONSOLE = src
 		else

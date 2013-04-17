@@ -308,8 +308,8 @@
 		powernets += C.powernet
 		C.powernet.cables += C
 
-		C.mergeConnectedNetworks(C.d2)
-		C.mergeConnectedNetworksOnTurf()
+		C.merge_connected_networks(C.d1)
+		C.merge_connected_networks(C.d2)
 
 
 		use(1)
@@ -370,9 +370,9 @@
 			if(C.powernet)
 				NC.powernet = C.powernet
 				NC.powernet.cables += NC
-				NC.mergeConnectedNetworks(NC.d2)
-				NC.mergeConnectedNetworksOnTurf()
-			use(1)
+				NC.merge_connected_networks(NC.d1)
+				NC.merge_connected_networks(NC.d2)
+		 	use(1)
 			if (NC.shock(user, 50))
 				if (prob(50)) //fail
 					new/obj/item/weapon/cable_coil(NC.loc, 1, NC.color)
@@ -407,9 +407,8 @@
 		C.updateicon()
 
 
-		C.mergeConnectedNetworks(C.d1)
-		C.mergeConnectedNetworks(C.d2)
-		C.mergeConnectedNetworksOnTurf()
+		C.merge_connected_networks(C.d1)
+		C.merge_connected_networks(C.d2)
 
 		use(1)
 		if (C.shock(user, 50))
@@ -419,72 +418,17 @@
 
 		return
 
-/obj/structure/cable/proc/mergeConnectedNetworks(var/direction)
+/obj/structure/cable/proc/merge_connected_networks(var/direction)
 	var/turf/TB
 	if(!(d1 == direction || d2 == direction))
 		return
 	TB = get_step(src, direction)
-
-	for(var/obj/structure/cable/TC in TB)
-
-		if(!TC)
-			continue
-
-		if(src == TC)
-			continue
-
-		var/fdir = (!direction)? 0 : turn(direction, 180)
-
-		if(TC.d1 == fdir || TC.d2 == fdir)
-
-			if(!TC.powernet)
-				TC.powernet = new()
-				powernets += TC.powernet
-				TC.powernet.cables += TC
-
-			if(powernet)
-				merge_powernets(powernet,TC.powernet)
-			else
-				powernet = TC.powernet
-				powernet.cables += src
-
-
-
-
-/obj/structure/cable/proc/mergeConnectedNetworksOnTurf()
-	if(!powernet)
-		powernet = new()
-		powernets += powernet
-		powernet.cables += src
-
-	for(var/AM in loc)
-		if(istype(AM,/obj/structure/cable))
-			var/obj/structure/cable/C = AM
-			if(C.powernet == powernet)	continue
-			if(C.powernet)
-				merge_powernets(powernet, C.powernet)
-			else
-				C.powernet = powernet
-				powernet.cables += C
-
-		else if(istype(AM,/obj/machinery/power/apc))
-			var/obj/machinery/power/apc/N = AM
-			if(!N.terminal)	continue
-			if(N.terminal.powernet)
-				merge_powernets(powernet, N.terminal.powernet)
-			else
-				N.terminal.powernet = powernet
-				powernet.nodes[N.terminal] = N.terminal
-
-		else if(istype(AM,/obj/machinery/power))
-			var/obj/machinery/power/M = AM
-			if(M.powernet == powernet)	continue
-			if(M.powernet)
-				merge_powernets(powernet, M.powernet)
-			else
-				M.powernet = powernet
-				powernet.nodes[M] = M
-
+	var/list/check_list = power_list(TB, src, direction)
+	for(var/obj/PO in check_list)
+		if(PO:powernet)
+			merge_powernets(powernet,PO:powernet)
+		else
+			PO:powernet = powernet
 
 obj/structure/cable/proc/cableColor(var/colorC)
 	var/color_n = "red"

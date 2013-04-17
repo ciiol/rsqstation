@@ -126,8 +126,6 @@
 			if(!unmarked || !C.powernet)
 				if(C.d1 == fdir || C.d2 == fdir)
 					. += C
-				else if(C.d1 == turn(C.d2, 180))
-					. += C
 	return .
 
 
@@ -294,7 +292,7 @@
 	// Disconnect machines connected to nodes
 	if(node)
 		for(var/obj/machinery/power/P in T1)
-			if(P.powernet && !P.powernet.nodes[src])
+			if(P.powernet && !P.powernet.nodes[P])
 				P.disconnect_from_network()
 //		if(Debug)
 //			world.log << "Old PN#[number] : ([cables.len];[nodes.len])"
