@@ -70,9 +70,9 @@ var/blobevent = 0
 var/diary = null
 var/diaryofmeanpeople = null
 var/href_logfile = null
-var/station_name = "RSq Station"
+var/station_name = "Space Station 13"
 var/game_version = "Baystation12 custom modified"
-var/changelog_hash = "http://red-squadron.ru/forum/"
+var/changelog_hash = ""
 
 var/datum/air_tunnel/air_tunnel1/SS13_airtunnel = null
 var/going = 1.0

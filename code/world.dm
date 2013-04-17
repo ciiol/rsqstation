@@ -237,9 +237,9 @@
 
 	if (config && config.server_name)
 		s += "<b>[config.server_name]</b> &#8212; "
-	s += "<b>[station_name()] \[RU\] <br /><img src=\"http://i.imgur.com/UqIeNlT.png\"></b>";
+	s += "<b>[station_name()]</b>";
 	s += " ("
-	s += "<a href=\"http://red-squadron.ru/\">" //Change this to wherever you want the hub to link to.
+	s += "<a href=\"\">" //Change this to wherever you want the hub to link to.
 //	s += "[game_version]"
 	s += "Default"  //Replace this with something else. Or ever better, delete it and uncomment the game version.
 	s += "</a>"
