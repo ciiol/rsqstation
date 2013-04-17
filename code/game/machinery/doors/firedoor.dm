@@ -11,7 +11,7 @@
 
 	var/locked = 0
 	var/welded = 0
-	var/autoclose_time = 8
+	var/autoclose_time = 20
 	var/nextstate = null
 	var/net_id
 	var/list/areas_added
