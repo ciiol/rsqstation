@@ -8,6 +8,8 @@
 	req_one_access = list(access_atmospherics, access_engine_equip)
 	opacity = 0
 	density = 0
+	layer_open = 2.69  // Under other doors when opened
+	layer_close = 3.11 // Over other doors when closed
 
 	var/locked = 0
 	var/welded = 0

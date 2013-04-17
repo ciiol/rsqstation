@@ -8,6 +8,10 @@
 	anchored = 1
 	opacity = 1
 	density = 1
+
+	var/layer_open=2.7
+	var/layer_close=3.1
+
 	layer = 2.7
 
 	var/secondsElectrified = 0
@@ -22,11 +26,11 @@
 /obj/machinery/door/New()
 	..()
 	if(density)
-		layer = 3.1 //Above most items if closed
+		layer = layer_close //Above most items if closed
 		explosion_resistance = initial(explosion_resistance)
 		update_heat_protection(get_turf(src))
 	else
-		layer = 2.7 //Under all objects if opened. 2.7 due to tables being at 2.6
+		layer = layer_open //Under all objects if opened. 2.7 due to tables being at 2.6
 		explosion_resistance = 0
 	update_nearby_tiles(need_rebuild=1)
 	return
@@ -197,7 +201,7 @@
 	icon_state = "door0"
 	src.SetOpacity(0)
 	sleep(10)
-	src.layer = 2.7
+	src.layer = layer_open
 	src.density = 0
 	explosion_resistance = 0
 	update_icon()
@@ -224,7 +228,7 @@
 	animate("closing")
 	src.density = 1
 	explosion_resistance = initial(explosion_resistance)
-	src.layer = 3.1
+	src.layer = layer_close
 	sleep(10)
 	update_icon()
 	if(visible && !glass)
