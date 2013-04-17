@@ -11,7 +11,7 @@
 
 	var/locked = 0
 	var/welded = 0
-	var/autoclose_time = 8
+	var/autoclose_time = 20
 	var/nextstate = null
 	var/net_id
 	var/list/areas_added
@@ -19,6 +19,11 @@
 
 	New()
 		. = ..()
+		for(var/obj/machinery/door/firedoor/F in loc)
+			if(F != src)
+				spawn(1)
+					del src
+				return .
 		var/area/A = get_area(src)
 		ASSERT(istype(A))
 
@@ -138,7 +143,7 @@
 			else
 				users_name = "Unknown"
 
-		if( !stat && ( istype(C, /obj/item/weapon/card/id) || istype(C, /obj/item/device/pda) ) )
+		if( ishuman(user) &&  !stat && ( istype(C, /obj/item/weapon/card/id) || istype(C, /obj/item/device/pda) ) )
 			var/obj/item/weapon/card/id/ID = C
 
 			if( istype(C, /obj/item/device/pda) )
@@ -229,6 +234,8 @@
 
 
 /obj/machinery/door/firedoor/border_only
+//These are playing merry hell on ZAS.  Sorry fellas :(
+/*
 	icon = 'icons/obj/doors/edge_Doorfire.dmi'
 	glass = 1 //There is a glass window so you can see through the door
 			  //This is needed due to BYOND limitations in controlling visibility
@@ -263,3 +270,4 @@
 		if(istype(source)) air_master.tiles_to_update += source
 		if(istype(destination)) air_master.tiles_to_update += destination
 		return 1
+*/

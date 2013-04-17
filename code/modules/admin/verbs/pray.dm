@@ -20,9 +20,10 @@
 	msg = "\blue \icon[cross] <b><font color=purple>PRAY: </font>[key_name(src, 1)] (<A HREF='?_src_=holder;adminmoreinfo=\ref[src]'>?</A>) (<A HREF='?_src_=holder;adminplayeropts=\ref[src]'>PP</A>) (<A HREF='?_src_=vars;Vars=\ref[src]'>VV</A>) (<A HREF='?_src_=holder;subtlemessage=\ref[src]'>SM</A>) (<A HREF='?_src_=holder;adminplayerobservejump=\ref[src]'>JMP</A>) (<A HREF='?_src_=holder;secretsadmin=check_antagonist'>CA</A>) (<A HREF='?_src_=holder;adminspawncookie=\ref[src]'>SC</a>):</b> [msg]"
 
 	for(var/client/C in admins)
-		if(C.prefs.toggles & CHAT_PRAYER)
-			C << 'sound/effects/adminhelp.ogg'
-			C << msg
+		if((R_ADMIN|R_MOD) & C.holder.rights)
+			if(C.prefs.toggles & CHAT_PRAYER)
+				C << 'sound/effects/adminhelp.ogg'
+				C << msg
 	usr << "Your prayers have been received by the gods."
 
 	feedback_add_details("admin_verb","PR") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
