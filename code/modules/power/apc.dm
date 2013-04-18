@@ -140,6 +140,9 @@
 		src.area = A
 	else
 		src.area = get_area_name(areastring)
+
+	name = "[area.name] APC"
+
 	update_icon()
 
 	make_terminal()
