@@ -528,6 +528,7 @@ var/global/floorIsLava = 0
 			<A href='?src=\ref[src];secretsadmin=showgm'>Show Game Mode</A><BR>
 			<A href='?src=\ref[src];secretsadmin=manifest'>Show Crew Manifest</A><BR>
 			<A href='?src=\ref[src];secretsadmin=DNA'>List DNA (Blood)</A><BR>
+			<A href='?src=\ref[src];secretsadmin=list_dna_block_meaning'>List DNA blocks</A><BR>
 			<A href='?src=\ref[src];secretsadmin=fingerprints'>List Fingerprints</A><BR><BR>
 			<BR>
 			"}

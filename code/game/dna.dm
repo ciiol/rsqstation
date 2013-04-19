@@ -392,6 +392,22 @@
 /proc/probinj(var/pr, var/inj)
 	return prob(pr+inj*pr)
 
+/proc/domutverbcheck(mob/living/M as mob)
+	var/mutcode = list( "mRemotetalk" = mRemotetalk
+					  , "mRemote" = mRemote
+					  , "mMorph" = mMorph
+					  , "mSmallsize" = mSmallsize
+					  )
+	var/mutverbs = list( "mRemotetalk" = list(/mob/living/carbon/human/proc/remotesay)
+					   , "mRemote" = list(/mob/living/carbon/human/proc/remoteobserve)
+					   , "mMorph" = list(/mob/living/carbon/human/proc/morph)
+					   , "mSmallsize" = list(/mob/living/carbon/human/proc/hide)
+					   )
+	for (var/mut in mutverbs)
+		M.verbs -= mutverbs[mut]
+		if (mutcode[mut] in M.mutations)
+			M.verbs += mutverbs[mut]
+
 /proc/domutcheck(mob/living/M as mob, connected, inj)
 	if (!M) return
 
@@ -458,8 +474,12 @@
 		if(probinj(45,inj) || (mSmallsize in old_mutations))
 			M << "\blue Your skin feels rubbery"
 			M.mutations.Add(mSmallsize)
-
-
+			if (istype(M, /mob/living/carbon/human))
+				M.pass_flags |= PASSTABLE
+	if(!ismuton(SMALLSIZEBLOCK,M) && (mSmallsize in old_mutations))
+		if (istype(M, /mob/living/carbon/human))
+			M.pass_flags ^= PASSTABLE
+			M.layer = MOB_LAYER
 
 	if (isblockon(getblock(M.dna.struc_enzymes, HULKBLOCK,3),HULKBLOCK))
 		if(probinj(5,inj) || (HULK in old_mutations))
@@ -673,6 +693,7 @@
 		del(M)
 		return
 //////////////////////////////////////////////////////////// Monkey Block
+	domutverbcheck(M)
 	if(M)
 		M.update_icon = 1	//queue a full icon update at next life() call
 	return null

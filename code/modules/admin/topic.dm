@@ -2132,6 +2132,38 @@
 				for(var/l in bombers)
 					dat += text("[l]<BR>")
 				usr << browse(dat, "window=bombers")
+			if("list_dna_block_meaning")
+				var/blocks = list("Blind" = BLINDBLOCK,
+								  "Deaf" = DEAFBLOCK,
+								  "Hulk" = HULKBLOCK,
+								  "Telekinesis" = TELEBLOCK,
+								  "Fireresist" = FIREBLOCK,
+								  "X-ray" = XRAYBLOCK,
+								  "Clumsy" = CLUMSYBLOCK,
+								  "Random" = FAKEBLOCK,
+								  "Cough" = COUGHBLOCK,
+								  "Glasses" = GLASSESBLOCK,
+								  "Epilepsy" = EPILEPSYBLOCK,
+								  "Twitch" = TWITCHBLOCK,
+								  "Nervous" = NERVOUSBLOCK,
+								  "Headache" = HEADACHEBLOCK,
+								  "No breath" = NOBREATHBLOCK,
+								  "Remote view" = REMOTEVIEWBLOCK,
+								  "Regenerate" = REGENERATEBLOCK,
+								  "Increace run" = INCREASERUNBLOCK,
+								  "Remote talk" = REMOTETALKBLOCK,
+								  "Morph" = MORPHBLOCK,
+								  "Blend" = BLENDBLOCK,
+								  "Hallucination" = HALLUCINATIONBLOCK,
+								  "No prints" = NOPRINTSBLOCK,
+								  "Shock immune" = SHOCKIMMUNITYBLOCK,
+								  "Small size" = SMALLSIZEBLOCK)
+				var dat = "<h1>DNA blocks</h1>"
+				dat += "<ul>"
+				for(var/block_name in blocks)
+					dat += "<li> [block_name] = [blocks[block_name]] </li>"
+				dat += "</ul>"
+				usr << browse(dat, "window=dnablocksmeaning")
 			if("list_signalers")
 				var/dat = "<B>Showing last [length(lastsignalers)] signalers.</B><HR>"
 				for(var/sig in lastsignalers)

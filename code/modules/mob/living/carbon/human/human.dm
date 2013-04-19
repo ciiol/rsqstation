@@ -756,6 +756,11 @@
 									while(R.fields[text("com_[]", counter)])
 										counter++
 									R.fields[text("com_[]", counter)] = text("Made by [] ([]) on [], 2053<BR>[]",H.get_authentification_name(), H.get_assignment(), time2text(world.realtime, "DDD MMM DD hh:mm:ss"), t1)
+
+	if (href_list["remotesay"])
+		var/mob/living/carbon/M = locate(href_list["remotesay"])
+		remotesay(M)
+
 	..()
 	return
 
@@ -933,7 +938,7 @@
 
 	visible_message("\blue \The [src] morphs and changes [get_visible_gender() == MALE ? "his" : get_visible_gender() == FEMALE ? "her" : "their"] appearance!", "\blue You change your appearance!", "\red Oh, god!  What the hell was that?  It sounded like flesh getting squished and bone ground into a different shape!")
 
-/mob/living/carbon/human/proc/remotesay()
+/mob/living/carbon/human/proc/remotesay(var/mob/living/carbon/M)
 	set name = "Project mind"
 	set category = "Superpower"
 
@@ -945,21 +950,26 @@
 	if(!(mRemotetalk in src.mutations))
 		src.verbs -= /mob/living/carbon/human/proc/remotesay
 		return
-	var/list/creatures = list()
-	for(var/mob/living/carbon/h in world)
-		creatures += h
-	var/mob/target = input ("Who do you want to project your mind to ?") as null|anything in creatures
-	if (isnull(target))
+
+	if (!M || M == src)
+		var/list/creatures = list()
+		for(var/mob/living/carbon/h in world)
+			creatures += h
+		M = input ("Who do you want to project your mind to ?") as null|anything in creatures
+
+	if (!M || M == src)
 		return
 
-	var/say = input ("What do you wish to say")
-	if(mRemotetalk in target.mutations)
-		target.show_message("\blue You hear [src.real_name]'s voice: [say]")
+	var/say = sanitize(input ("What do you wish to say"))
+	if (length(say) == 0)
+		return
+	usr.show_message("\blue You project your mind into <a href='?src=\ref[src];remotesay=\ref[M]'>[M.real_name]</a>: [say]")
+	if(mRemotetalk in M.mutations)
+		M.show_message("\blue You hear <a href='?src=\ref[M];remotesay=\ref[src]'>[src.real_name]</a>'s voice: [say]")
 	else
-		target.show_message("\blue You hear a voice that seems to echo around the room: [say]")
-	usr.show_message("\blue You project your mind into [target.real_name]: [say]")
+		M.show_message("\blue You hear a voice that seems to echo around the room: [say]")
 	for(var/mob/dead/observer/G in world)
-		G.show_message("<i>Telepathic message from <b>[src]</b> to <b>[target]</b>: [say]</i>")
+		G.show_message("<i>Telepathic message from <b>[src]</b> to <b>[M]</b>: [say]</i>")
 
 /mob/living/carbon/human/proc/remoteobserve()
 	set name = "Remote View"
@@ -997,6 +1007,28 @@
 	else
 		remoteview_target = null
 		reset_view(0)
+
+/mob/living/carbon/human/proc/hide()
+	set name = "Hide"
+	set category = "Superpower"
+
+	var/hide_layer = 2.79 // Table layer is 2.8
+
+	if(stat!=CONSCIOUS)
+		reset_view(0)
+		return
+
+	if(!(mSmallsize in src.mutations))
+		src.verbs -= /mob/living/carbon/human/proc/hide
+		layer = MOB_LAYER
+		return
+
+	if (layer != hide_layer)
+		layer = hide_layer
+		src << text("\blue You are now hiding.")
+	else
+		layer = MOB_LAYER
+		src << text("\blue You have stopped hiding.")
 
 /mob/living/carbon/human/proc/get_visible_gender()
 	if(wear_suit && wear_suit.flags_inv & HIDEJUMPSUIT && ((head && head.flags_inv & HIDEMASK) || wear_mask))
