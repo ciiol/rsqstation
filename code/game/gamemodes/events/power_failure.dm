@@ -8,8 +8,13 @@
 	var/list/skipped_areas = list(/area/engine/singularity, /area/turret_protected/ai)
 
 	for(var/obj/machinery/power/smes/S in world)
-		if((get_area(S) in skipped_areas) || S.z != 1)
-			continue
+		var/area/A = get_area(S)
+		var/skip = 0
+		for(var/area_type in skipped_areas)
+			if(istype(A,area_type) || S.z != 1)
+				skip = 1
+				break
+		if(skip) continue
 		S.charge = 0
 		S.output = 0
 		S.online = 0
