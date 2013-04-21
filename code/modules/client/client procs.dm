@@ -214,6 +214,7 @@
 		//New player!! Need to insert all the stuff
 		var/DBQuery/query_insert = dbcon.NewQuery("INSERT INTO erro_player (id, ckey, firstseen, lastseen, ip, computerid, lastadminrank) VALUES (null, '[sql_ckey]', Now(), Now(), '[sql_ip]', '[sql_computerid]', '[sql_admin_rank]')")
 		query_insert.Execute()
+		player_age = 0
 
 	//Logging player access
 	var/serverip = "[world.internet_address]:[world.port]"
