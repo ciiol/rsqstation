@@ -38,6 +38,7 @@ proc/createRandomZlevel()
 		world << "\red \b Loading away mission..."
 
 		var/map = pick(potentialRandomZlevels)
+		world.log << "Load [map]"
 		var/file = file(map)
 		if(isfile(file))
 			maploader.load_map(file)
