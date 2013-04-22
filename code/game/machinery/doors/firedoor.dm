@@ -61,6 +61,12 @@
 			return
 		if(!density)
 			return ..()
+		if(istype(AM, /obj/mecha))
+			var/obj/mecha/mecha = AM
+			if(density)
+				if(mecha.occupant && (src.allowed(mecha.occupant) || src.check_access_list(mecha.operation_req_access)))
+					open()
+			return
 		return 0
 
 
@@ -129,8 +135,6 @@
 			if(density)
 				spawn(0)
 					open()
-					spawn(autoclose_time)
-						nextstate = CLOSED
 			else
 				spawn(0)
 					close()
@@ -186,8 +190,6 @@
 				needs_to_close = 1
 			spawn()
 				open()
-				spawn(autoclose_time)
-					nextstate = CLOSED
 		else
 			spawn()
 				close()
@@ -233,6 +235,10 @@
 				overlays += "welded_open"
 		return
 
+	open()
+		spawn(autoclose_time)
+			nextstate = CLOSED
+		..()
 
 
 /obj/machinery/door/firedoor/border_only
