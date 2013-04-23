@@ -65,6 +65,8 @@
 			var/obj/mecha/mecha = AM
 			if(density)
 				if(mecha.occupant && (src.allowed(mecha.occupant) || src.check_access_list(mecha.operation_req_access)))
+					spawn(autoclose_time)
+						nextstate = CLOSED
 					open()
 			return
 		return 0
@@ -134,6 +136,8 @@
 					"You hear metal strain and groan, and a door [density ? "open" : "close"].")
 			if(density)
 				spawn(0)
+					spawn(autoclose_time)
+						nextstate = CLOSED
 					open()
 			else
 				spawn(0)
@@ -189,6 +193,8 @@
 			if(alarmed)
 				needs_to_close = 1
 			spawn()
+				spawn(autoclose_time)
+					nextstate = CLOSED
 				open()
 		else
 			spawn()
@@ -234,11 +240,6 @@
 			if(welded)
 				overlays += "welded_open"
 		return
-
-	open()
-		spawn(autoclose_time)
-			nextstate = CLOSED
-		..()
 
 
 /obj/machinery/door/firedoor/border_only
