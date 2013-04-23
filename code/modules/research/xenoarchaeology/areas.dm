@@ -1,10 +1,10 @@
 
 /area/research_outpost
-	name = "Research Outpost"
+	name = "research_outpost"
 	icon_state = "anomaly"
 
 /area/research_outpost/hallway
-	name = "Research Outpost Hallway"
+	name = "Xenoarcheology Hallway"
 	icon_state = "hallC"
 
 /area/research_outpost/gearstore
@@ -12,15 +12,15 @@
 	icon_state = "anog"
 
 /area/research_outpost/power
-	name = "Research Outpost Power"
+	name = "Xenoarcheology Power"
 	icon_state = "engine"
 
 /area/research_outpost/atmos
-	name = "Research Outpost Atmospherics"
+	name = "Xenoarcheology Atmospherics"
 	icon_state = "atmos"
 
 /area/research_outpost/maint
-	name = "Research Outpost Maintenance"
+	name = "Xenoarcheology Maintenance"
 	icon_state = "maintcentral"
 
 /area/research_outpost/iso1
@@ -52,7 +52,7 @@
 	icon_state = "anolab"
 
 /area/research_outpost/med
-	name = "Research Outpost Medbay"
+	name = "research_outpost Medbay"
 	icon_state = "medbay3"
 
 /area/research_outpost/entry
