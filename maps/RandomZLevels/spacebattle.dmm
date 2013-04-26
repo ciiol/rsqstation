@@ -364,7 +364,7 @@
 "gZ" = (/obj/machinery/computer/operating,/turf/simulated/floor{icon_state = "white"},/area/awaymission/spacebattle/cruiser)
 "ha" = (/obj/effect/landmark/corpse/doctor{mobname = "Allan Yoshimaru"; name = "Allan Yoshimaru"},/obj/effect/decal/cleanable/blood,/turf/simulated/floor{icon_state = "white"},/area/awaymission/spacebattle/cruiser)
 "hb" = (/obj/effect/decal/cleanable/blood,/turf/simulated/floor{icon_state = "white"},/area/awaymission/spacebattle/cruiser)
-"hc" = (/obj/structure/stool/bed/chair{dir = 8},/turf/simulated/floor/wood,/area/awaymission/spacebattle/cruiser)
+"hc" = (/obj/structure/stool/bed/chair{dir = 8},/obj/machinery/door_control{dir = 2; id = "spacebattlestorage"; name = "Secure Storage"; pixel_x = 24; pixel_y = 0},/turf/simulated/floor/wood,/area/awaymission/spacebattle/cruiser)
 "hd" = (/obj/structure/table/reinforced,/turf/simulated/floor{icon_state = "blue"; dir = 10},/area/awaymission/spacebattle/cruiser)
 "he" = (/obj/structure/table/reinforced,/turf/simulated/floor{dir = 0; icon_state = "blue"},/area/awaymission/spacebattle/cruiser)
 "hf" = (/obj/structure/grille,/obj/structure/window/reinforced{dir = 8},/obj/structure/window/reinforced{dir = 4},/obj/structure/window/reinforced,/turf/simulated/floor/plating,/area/awaymission/spacebattle/cruiser)
