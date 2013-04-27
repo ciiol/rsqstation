@@ -759,7 +759,7 @@
 
 	if (href_list["remotesay"])
 		var/mob/living/carbon/M = locate(href_list["remotesay"])
-		remotesay(M)
+		remotesay_to(M)
 
 	..()
 	return
@@ -938,9 +938,35 @@
 
 	visible_message("\blue \The [src] morphs and changes [get_visible_gender() == MALE ? "his" : get_visible_gender() == FEMALE ? "her" : "their"] appearance!", "\blue You change your appearance!", "\red Oh, god!  What the hell was that?  It sounded like flesh getting squished and bone ground into a different shape!")
 
-/mob/living/carbon/human/proc/remotesay(var/mob/living/carbon/M)
+/mob/living/carbon/human/proc/remotesay_to(var/mob/living/carbon/M)
+	set name = "Project mind"
+	set category = null
+	set popup_menu = 1
+
+	if(stat!=CONSCIOUS)
+		reset_view(0)
+		remoteview_target = null
+		return
+
+	if(!(mRemotetalk in src.mutations))
+		src.verbs -= /mob/living/carbon/human/proc/remotesay
+		return
+
+	var/say = sanitize(input ("What do you wish to say"))
+	if (length(say) == 0)
+		return
+	usr.show_message("\blue You project your mind into <a href='?src=\ref[src];remotesay=\ref[M]'>[M.real_name]</a>: [say]")
+	if(mRemotetalk in M.mutations)
+		M.show_message("\blue You hear <a href='?src=\ref[M];remotesay=\ref[src]'>[src.real_name]</a>'s voice: [say]")
+	else
+		M.show_message("\blue You hear a voice that seems to echo around the room: [say]")
+	for(var/mob/dead/observer/G in world)
+		G.show_message("<i>Telepathic message from <b>[src]</b> to <b>[M]</b>: [say]</i>")
+
+/mob/living/carbon/human/proc/remotesay()
 	set name = "Project mind"
 	set category = "Superpower"
+	set popup_menu = 0
 
 	if(stat!=CONSCIOUS)
 		reset_view(0)
@@ -960,16 +986,8 @@
 	if (!M || M == src)
 		return
 
-	var/say = sanitize(input ("What do you wish to say"))
-	if (length(say) == 0)
-		return
-	usr.show_message("\blue You project your mind into <a href='?src=\ref[src];remotesay=\ref[M]'>[M.real_name]</a>: [say]")
-	if(mRemotetalk in M.mutations)
-		M.show_message("\blue You hear <a href='?src=\ref[M];remotesay=\ref[src]'>[src.real_name]</a>'s voice: [say]")
-	else
-		M.show_message("\blue You hear a voice that seems to echo around the room: [say]")
-	for(var/mob/dead/observer/G in world)
-		G.show_message("<i>Telepathic message from <b>[src]</b> to <b>[M]</b>: [say]</i>")
+	remotesay_to(M)
+
 
 /mob/living/carbon/human/proc/remoteobserve()
 	set name = "Remote View"
@@ -995,7 +1013,7 @@
 
 	for(var/mob/living/carbon/h in world)
 		var/turf/temp_turf = get_turf(h)
-		if((temp_turf.z != 1 && temp_turf.z != 5) || h.stat!=CONSCIOUS) //Not on mining or the station. Or dead
+		if((temp_turf.z != 1) || h.stat!=CONSCIOUS) //Not on the station. Or dead
 			continue
 		creatures += h
 

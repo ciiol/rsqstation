@@ -398,7 +398,8 @@
 					  , "mMorph" = mMorph
 					  , "mSmallsize" = mSmallsize
 					  )
-	var/mutverbs = list( "mRemotetalk" = list(/mob/living/carbon/human/proc/remotesay)
+	var/mutverbs = list( "mRemotetalk" = list(/mob/living/carbon/human/proc/remotesay,
+	                                          /mob/living/carbon/human/proc/remotesay_to)
 					   , "mRemote" = list(/mob/living/carbon/human/proc/remoteobserve)
 					   , "mMorph" = list(/mob/living/carbon/human/proc/morph)
 					   , "mSmallsize" = list(/mob/living/carbon/human/proc/hide)
