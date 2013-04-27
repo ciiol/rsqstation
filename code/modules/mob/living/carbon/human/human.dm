@@ -952,6 +952,15 @@
 		src.verbs -= /mob/living/carbon/human/proc/remotesay
 		return
 
+	if (!M || M == src)
+		var/list/creatures = list()
+		for(var/mob/living/carbon/h in world)
+			creatures += h
+		M = input ("Who do you want to project your mind to ?") as null|anything in creatures
+
+	if (!M || M == src)
+		return
+
 	var/say = sanitize(input ("What do you wish to say"))
 	if (length(say) == 0)
 		return
