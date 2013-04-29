@@ -1023,16 +1023,16 @@
 
 	var/list/mob/creatures = list()
 
-
+	var/turf/my_turf = get_turf(src)
 	for(var/mob/living/carbon/human/h in world)
 		var/turf/temp_turf = get_turf(h)
-		if((temp_turf.z != 1) || h.stat!=CONSCIOUS) //Not on the station. Or dead
+		if((temp_turf.z != my_turf.z) || h.stat!=CONSCIOUS) //Not on the station. Or dead
 			continue
 		creatures += h
 
 	for(var/mob/living/carbon/h in world)
 		var/turf/temp_turf = get_turf(h)
-		if((temp_turf.z != 1) || h.stat!=CONSCIOUS || istype(h, /mob/living/carbon/human)) //Not on the station. Or dead
+		if((temp_turf.z != my_turf.z) || h.stat!=CONSCIOUS || istype(h, /mob/living/carbon/human)) //Not on the station. Or dead
 			continue
 		creatures += h
 
