@@ -350,6 +350,8 @@
 		if(status_flags & GODMODE)
 			return
 
+		if((health > 0) && (mNobreath in mutations)) return // No need to breath
+
 		if(!breath || (breath.total_moles() == 0) || suiciding)
 			if(reagents.has_reagent("inaprovaline"))
 				return
@@ -514,11 +516,17 @@
 			if(thermal_protection < 1)
 				bodytemperature += min((1-thermal_protection) * ((loc_temp - bodytemperature) / BODYTEMP_HEAT_DIVISOR), BODYTEMP_HEATING_MAX)
 
+		var body_additional_heat_limit = 0
+		var body_additional_cold_limit = 0
+		if(COLD_RESISTANCE in mutations)
+			body_additional_heat_limit = 200
+			body_additional_cold_limit = 261
+
 		// +/- 50 degrees from 310.15K is the 'safe' zone, where no damage is dealt.
-		if(bodytemperature > BODYTEMP_HEAT_DAMAGE_LIMIT)
+		if(bodytemperature > (BODYTEMP_HEAT_DAMAGE_LIMIT + body_additional_heat_limit))
 			//Body temperature is too hot.
 			fire_alert = max(fire_alert, 1)
-			switch(bodytemperature)
+			switch(bodytemperature - body_additional_heat_limit)
 				if(360 to 400)
 					apply_damage(HEAT_DAMAGE_LEVEL_1, BURN, used_weapon = "High Body Temperature")
 					fire_alert = max(fire_alert, 2)
@@ -529,10 +537,10 @@
 					apply_damage(HEAT_DAMAGE_LEVEL_3, BURN, used_weapon = "High Body Temperature")
 					fire_alert = max(fire_alert, 2)
 
-		else if(bodytemperature < BODYTEMP_COLD_DAMAGE_LIMIT)
+		else if(bodytemperature < (BODYTEMP_COLD_DAMAGE_LIMIT - body_additional_cold_limit))
 			fire_alert = max(fire_alert, 1)
 			if(!istype(loc, /obj/machinery/atmospherics/unary/cryo_cell))
-				switch(bodytemperature)
+				switch(bodytemperature + body_additional_cold_limit)
 					if(200 to 260)
 						apply_damage(COLD_DAMAGE_LEVEL_1, BURN, used_weapon = "Low Body Temperature")
 						fire_alert = max(fire_alert, 1)
@@ -559,7 +567,7 @@
 			if(HAZARD_LOW_PRESSURE to WARNING_LOW_PRESSURE)
 				pressure_alert = -1
 			else
-				if( !(COLD_RESISTANCE in mutations) )
+				if( !(mRegen in mutations) )
 					adjustBruteLoss( LOW_PRESSURE_DAMAGE )
 					pressure_alert = -2
 				else

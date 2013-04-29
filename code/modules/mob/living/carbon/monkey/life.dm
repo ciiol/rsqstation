@@ -251,6 +251,8 @@
 		if(status_flags & GODMODE)
 			return
 
+		if((health > 0) && (mNobreath in mutations)) return // No need to breath
+
 		if(!breath || (breath.total_moles == 0))
 			adjustOxyLoss(7)
 
@@ -375,7 +377,7 @@
 			if(HAZARD_LOW_PRESSURE to WARNING_LOW_PRESSURE)
 				pressure_alert = -1
 			else
-				if( !(COLD_RESISTANCE in mutations) )
+				if( !(mRegen in mutations) )
 					adjustBruteLoss( LOW_PRESSURE_DAMAGE )
 					pressure_alert = -2
 				else
@@ -385,13 +387,21 @@
 
 	proc/handle_temperature_damage(body_part, exposed_temperature, exposed_intensity)
 		if(status_flags & GODMODE) return
-		var/discomfort = min( abs(exposed_temperature - bodytemperature)*(exposed_intensity)/2000000, 1.0)
+		var/discomfort = 0
 		//adjustFireLoss(2.5*discomfort)
 
-		if(exposed_temperature > bodytemperature)
+		var body_additional_heat_limit = 0
+		var body_additional_cold_limit = 0
+		if(COLD_RESISTANCE in mutations)
+			body_additional_heat_limit = 200
+			body_additional_cold_limit = 261
+
+		if(exposed_temperature > (bodytemperature + body_additional_heat_limit))
+			discomfort = min((exposed_temperature - bodytemperature - body_additional_heat_limit)*(exposed_intensity)/2000000, 1.0)
 			adjustFireLoss(20.0*discomfort)
 
-		else
+		if(exposed_temperature < (bodytemperature - body_additional_cold_limit))
+			discomfort = min((bodytemperature + body_additional_cold_limit + exposed_temperature)*(exposed_intensity)/2000000, 1.0)
 			adjustFireLoss(5.0*discomfort)
 
 	proc/handle_chemicals_in_body()
