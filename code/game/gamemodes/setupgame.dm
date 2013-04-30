@@ -10,6 +10,12 @@
 
 	tempnum = pick(avnums)
 	avnums.Remove(tempnum)
+	BLINDBLOCK = tempnum
+	tempnum = pick(avnums)
+	avnums.Remove(tempnum)
+	DEAFBLOCK = tempnum
+	tempnum = pick(avnums)
+	avnums.Remove(tempnum)
 	HULKBLOCK = tempnum
 	tempnum = pick(avnums)
 	avnums.Remove(tempnum)
@@ -28,22 +34,22 @@
 	FAKEBLOCK = tempnum
 	tempnum = pick(avnums)
 	avnums.Remove(tempnum)
-	DEAFBLOCK = tempnum
-	tempnum = pick(avnums)
-	avnums.Remove(tempnum)
-	BLINDBLOCK = tempnum
-	tempnum = pick(avnums)
-	avnums.Remove(tempnum)
-	HEADACHEBLOCK = tempnum
-	tempnum = pick(avnums)
-	avnums.Remove(tempnum)
 	COUGHBLOCK = tempnum
+	tempnum = pick(avnums)
+	avnums.Remove(tempnum)
+	GLASSESBLOCK = tempnum
+	tempnum = pick(avnums)
+	avnums.Remove(tempnum)
+	EPILEPSYBLOCK = tempnum
 	tempnum = pick(avnums)
 	avnums.Remove(tempnum)
 	TWITCHBLOCK = tempnum
 	tempnum = pick(avnums)
 	avnums.Remove(tempnum)
 	NERVOUSBLOCK = tempnum
+	tempnum = pick(avnums)
+	avnums.Remove(tempnum)
+	HEADACHEBLOCK = tempnum
 	tempnum = pick(avnums)
 	avnums.Remove(tempnum)
 	NOBREATHBLOCK = tempnum
@@ -77,9 +83,6 @@
 	tempnum = pick(avnums)
 	avnums.Remove(tempnum)
 	SMALLSIZEBLOCK = tempnum
-	tempnum = pick(avnums)
-	avnums.Remove(tempnum)
-	GLASSESBLOCK = tempnum
 
 	// HIDDEN MUTATIONS / SUPERPOWERS INITIALIZTION
 

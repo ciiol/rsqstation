@@ -295,7 +295,7 @@
 	if(!M)	return
 	var/num
 	var/newdna
-	num = pick(GLASSESBLOCK,COUGHBLOCK,FAKEBLOCK,NERVOUSBLOCK,CLUMSYBLOCK,TWITCHBLOCK,HEADACHEBLOCK,BLINDBLOCK,DEAFBLOCK,HALLUCINATIONBLOCK)
+	num = pick(GLASSESBLOCK,COUGHBLOCK,FAKEBLOCK,NERVOUSBLOCK,CLUMSYBLOCK,TWITCHBLOCK,HEADACHEBLOCK,EPILEPSYBLOCK,BLINDBLOCK,DEAFBLOCK,HALLUCINATIONBLOCK)
 	M.dna.check_integrity()
 	newdna = setblock(M.dna.struc_enzymes,num,toggledblock(getblock(M.dna.struc_enzymes,num,3)),3)
 	M.dna.struc_enzymes = newdna
@@ -398,7 +398,8 @@
 					  , "mMorph" = mMorph
 					  , "mSmallsize" = mSmallsize
 					  )
-	var/mutverbs = list( "mRemotetalk" = list(/mob/living/carbon/human/proc/remotesay)
+	var/mutverbs = list( "mRemotetalk" = list(/mob/living/carbon/human/proc/remotesay,
+	                                          /mob/living/carbon/human/proc/remotesay_to)
 					   , "mRemote" = list(/mob/living/carbon/human/proc/remoteobserve)
 					   , "mMorph" = list(/mob/living/carbon/human/proc/morph)
 					   , "mSmallsize" = list(/mob/living/carbon/human/proc/hide)
@@ -486,6 +487,8 @@
 			M << "\blue Your muscles hurt."
 			M.mutations.Add(HULK)
 	if (isblockon(getblock(M.dna.struc_enzymes, HEADACHEBLOCK,3),HEADACHEBLOCK))
+		M << "\red You get a headache."
+	if (isblockon(getblock(M.dna.struc_enzymes, EPILEPSYBLOCK,3),EPILEPSYBLOCK))
 		M.disabilities |= EPILEPSY
 		M << "\red You get a headache."
 	if (isblockon(getblock(M.dna.struc_enzymes, FAKEBLOCK,3),FAKEBLOCK))
