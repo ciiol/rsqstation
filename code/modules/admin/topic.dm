@@ -2157,7 +2157,8 @@
 								  "Hallucination" = HALLUCINATIONBLOCK,
 								  "No prints" = NOPRINTSBLOCK,
 								  "Shock immune" = SHOCKIMMUNITYBLOCK,
-								  "Small size" = SMALLSIZEBLOCK)
+								  "Small size" = SMALLSIZEBLOCK,
+								  "Offset" = BLOCKADD)
 				var dat = "<h1>DNA blocks</h1>"
 				dat += "<ul>"
 				for(var/block_name in blocks)
