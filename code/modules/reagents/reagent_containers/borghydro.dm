@@ -13,11 +13,11 @@
 	var/mode = 1
 	var/charge_cost = 50
 	var/charge_tick = 0
-	var/recharge_time = 5 //Time it takes for shots to recharge (in seconds)
+	var/recharge_time = 3 //Time it takes for shots to recharge (in seconds)
 
 	var/list/datum/reagents/reagent_list = list()
-	var/list/reagent_ids = list("doctorsdelight", "inaprovaline", "spaceacillin")
-	//var/list/reagent_ids = list("dexalin", "kelotane", "bicaridine", "anti_toxin", "inaprovaline", "spaceacillin")
+//	var/list/reagent_ids = list("doctorsdelight", "inaprovaline", "spaceacillin")
+	var/list/reagent_ids = list("dexalin", "dermaline", "bicaridine", "anti_toxin", "inaprovaline", "spaceacillin")
 
 /obj/item/weapon/reagent_containers/borghypo/New()
 	..()
