@@ -70,6 +70,20 @@
 			index = findtext(t, "____255;")
 	return t
 
+/proc/to_unicode(var/t)
+	var/index = findtext(t, "&#255;")
+	while(index)
+		t = copytext(t, 1, index) + "&#1103;" + copytext(t, index+6)
+		index = findtext(t, "&#255;")
+	return t
+
+/proc/from_unicode(var/t)
+	var/index = findtext(t, "&#1103;")
+	while(index)
+		t = copytext(t, 1, index) + "&#255;" + copytext(t, index+7)
+		index = findtext(t, "&#1103;")
+	return t
+
 //Runs sanitize and strip_html_simple
 //I believe strip_html_simple() is required to run first to prevent '<' from displaying as '&lt;' after sanitize() calls byond's html_encode()
 /proc/strip_html(var/t,var/limit=MAX_MESSAGE_LEN)
