@@ -257,6 +257,7 @@
 	proc/breathe()
 		if(reagents.has_reagent("lexorin")) return
 		if(istype(loc, /obj/machinery/atmospherics/unary/cryo_cell)) return
+		if((health > 0) && (mNobreath in mutations)) return // No need to breath
 
 		var/datum/organ/internal/lungs/L = internal_organs["lungs"]
 		L.process()
