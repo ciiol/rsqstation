@@ -1557,6 +1557,11 @@ proc/process_ghost_teleport_locs()
 	luminosity = 1
 	requires_power = 0
 
+/area/awaymission/wwminesmed
+	name = "\improper Wild West Mines Medbay"
+	icon_state = "away1"
+	luminosity = 1
+
 /area/awaymission/wwgov
 	name = "\improper Wild West Mansion"
 	icon_state = "away2"

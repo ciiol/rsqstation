@@ -136,7 +136,6 @@
 
 
 /obj/effect/landmark/corpse/doctor
-	name = "Doctor"
 	corpseradio = /obj/item/device/radio/headset/headset_med
 	corpseuniform = /obj/item/clothing/under/rank/medical
 	corpsesuit = /obj/item/clothing/suit/storage/labcoat
@@ -146,6 +145,11 @@
 	corpseid = 1
 	corpseidjob = "Medical Doctor"
 	corpseidaccess = "Medical Doctor"
+
+/obj/effect/landmark/corpse/doctor/rig
+	corpsesuit = /obj/item/clothing/suit/space/rig/medical
+	corpsemask = /obj/item/clothing/mask/breath
+	corpsehelmet = /obj/item/clothing/head/helmet/space/rig/medical
 
 /obj/effect/landmark/corpse/engineer
 	name = "Engineer"
