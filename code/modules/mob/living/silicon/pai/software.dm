@@ -412,17 +412,11 @@
 // Crew Manifest
 /mob/living/silicon/pai/proc/softwareManifest()
 	var/dat = ""
-
-	dat = "<h4>Crew Manifest</h4>"
+	dat += "<h2>Crew Manifest</h2><br><br>"
 	if(data_core)
-		dat += data_core.get_manifest(1) // make it monochrome
+		dat += data_core.get_manifest(0) // make it monochrome
 	dat += "<br>"
-
-	dat += "</body></html>"
-
-	src << browse(dat, "window=airoster")
-	onclose(src, "airoster")
-
+	return dat
 
 // Medical Records
 /mob/living/silicon/pai/proc/softwareMedicalRecord()

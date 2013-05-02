@@ -234,15 +234,12 @@ var/list/ai_list = list()
 /mob/living/silicon/ai/proc/ai_roster()
 	set category = "AI Commands"
 	set name = "Show Crew Manifest"
-	var/dat = "<html><head><title>Crew Roster</title></head><body><b>Crew Roster:</b><br><br>"
+	var/dat
 
-	dat = "<h4>Crew Manifest</h4>"
+	dat += "<h4>Crew Manifest</h4>"
 	if(data_core)
-		dat += data_core.get_manifest(1) // make it monochrome
+		dat += data_core.get_manifest(0) // make it monochrome
 	dat += "<br>"
-
-	dat += "</body></html>"
-
 	src << browse(dat, "window=airoster")
 	onclose(src, "airoster")
 
