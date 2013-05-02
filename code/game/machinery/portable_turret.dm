@@ -452,7 +452,8 @@ Status: []<BR>"},
 		for(var/mob/living/simple_animal/C in view(7,src))
 			if(!C.stat && \
 			   !istype(C, /mob/living/simple_animal/cat/Runtime) && \
-			   !istype(C, /mob/living/simple_animal/corgi/Ian))
+			   !istype(C, /mob/living/simple_animal/corgi/Ian) && \
+			   !istype(C, /mob/living/simple_animal/mouse))
 				targets += C
 
 	for (var/mob/living/carbon/C in view(7,src)) // loops through all living carbon-based lifeforms in view(12)
@@ -464,7 +465,7 @@ Status: []<BR>"},
 			if(emagged) // if emagged, HOLY SHIT EVERYONE IS DANGEROUS beep boop beep
 				targets += C
 			else
-				if (C.stat || C.handcuffed) // if the perp is handcuffed or dead/dying, no need to bother really
+				if (C.stat || C.handcuffed || (projectile == /obj/item/projectile/energy/electrode && !C.canmove)) // if the perp is handcuffed or dead/dying or cann't move, no need to bother really
 					continue // move onto next potential victim!
 
 				var/dst = get_dist(src, C) // if it's too far away, why bother?
