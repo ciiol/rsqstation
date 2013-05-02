@@ -7,7 +7,7 @@
 	item_state = "hypo"
 	icon_state = "borghypo"
 	amount_per_transfer_from_this = 5
-	volume = 30
+	volume = 50
 	possible_transfer_amounts = null
 	flags = FPRINT
 	var/mode = 1
@@ -16,8 +16,8 @@
 	var/recharge_time = 3 //Time it takes for shots to recharge (in seconds)
 
 	var/list/datum/reagents/reagent_list = list()
-//	var/list/reagent_ids = list("doctorsdelight", "inaprovaline", "spaceacillin")
-	var/list/reagent_ids = list("dexalin", "dermaline", "bicaridine", "anti_toxin", "inaprovaline", "spaceacillin")
+	var/list/reagent_ids = list("tricordrazine", "inaprovaline", "spaceacillin")
+//	var/list/reagent_ids = list("dexalin", "dermaline", "bicaridine", "anti_toxin", "inaprovaline", "spaceacillin")
 
 /obj/item/weapon/reagent_containers/borghypo/New()
 	..()
@@ -56,12 +56,12 @@
 // Use this to add more chemicals for the borghypo to produce.
 /obj/item/weapon/reagent_containers/borghypo/proc/add_reagent(var/reagent)
 	reagent_ids |= reagent
-	var/datum/reagents/RG = new(30)
+	var/datum/reagents/RG = new(50)
 	RG.my_atom = src
 	reagent_list += RG
 
 	var/datum/reagents/R = reagent_list[reagent_list.len]
-	R.add_reagent(reagent, 30)
+	R.add_reagent(reagent, 50)
 
 /obj/item/weapon/reagent_containers/borghypo/attack(mob/M as mob, mob/user as mob)
 	var/datum/reagents/R = reagent_list[mode]

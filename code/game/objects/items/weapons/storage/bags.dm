@@ -220,4 +220,4 @@
 /obj/item/weapon/storage/bag/sheetsnatcher/borg
 	name = "Sheet Snatcher 9000"
 	desc = ""
-	capacity = 500//Borgs get more because >specialization
+	capacity = 1000//Borgs get more because >specialization
