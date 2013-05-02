@@ -36,6 +36,7 @@
 	R.updatename("Default")
 	R.status_flags |= CANPUSH
 	R.updateicon()
+	R.verbs -= /mob/living/silicon/robot/verb/cmd_robot_crew_mon
 
 	return 1
 

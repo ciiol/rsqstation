@@ -341,7 +341,6 @@ var/global/list/obj/item/device/pda/PDAs = list()
 					if (cartridge.access_remote_door)
 						dat += "<li><a href='byond://?src=\ref[src];choice=Toggle Door'><img src=pda_rdoor.png> Toggle Remote Door</a></li>"
 				dat += "<li><a href='byond://?src=\ref[src];choice=3'><img src=pda_atmos.png> Atmospheric Scan</a></li>"
-				dat += "<li><a href='byond://?src=\ref[src];choice=Light'><img src=pda_flashlight.png> [fon ? "Disable" : "Enable"] Flashlight</a></li>"
 				if (pai)
 					if(pai.loc != src)
 						pai = null
@@ -469,6 +468,7 @@ var/global/list/obj/item/device/pda/PDAs = list()
 					U << browse(null, "window=pda")
 					return
 				if("Refresh")//Refresh, goes to the end of the proc.
+					src.updateUsrDialog()
 				if("Return")//Return
 					if(mode<=9)
 						mode = 0

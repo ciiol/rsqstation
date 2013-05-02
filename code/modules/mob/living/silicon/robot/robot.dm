@@ -57,6 +57,8 @@
 	var/pose
 
 /mob/living/silicon/robot/New(loc,var/syndie = 0)
+	verbs -= /mob/living/silicon/robot/verb/cmd_robot_crew_mon
+
 	spark_system = new /datum/effect/effect/system/spark_spread()
 	spark_system.set_up(5, 0, src)
 	spark_system.attach(src)
@@ -159,6 +161,7 @@
 			status_flags &= ~CANPUSH
 			feedback_inc("cyborg_medical",1)
 			channels = list("Medical" = 1)
+			verbs += /mob/living/silicon/robot/verb/cmd_robot_crew_mon
 
 
 		if("Security")
@@ -944,7 +947,7 @@
 		src << browse(null, "window=crewcomp")
 		return
 	if(href_list["update"])
-		return
+		robot_crew_mon()
 	if (href_list["mach_close"])
 		var/t1 = text("window=[href_list["mach_close"]]")
 		unset_machine()
