@@ -533,6 +533,7 @@ Status: []<BR>"},
 		cover.icon_state="openTurretCover"
 		raised=1
 		layer=4
+		density = 1
 
 	popDown() // pops the turret down
 		if(disabled)
@@ -547,6 +548,7 @@ Status: []<BR>"},
 		cover.icon_state="turretCover"
 		raised=0
 		invisibility=2
+		density = 0
 		icon_state="[lasercolor]grey_target_prism"
 
 
