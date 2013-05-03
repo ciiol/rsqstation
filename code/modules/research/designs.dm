@@ -1329,6 +1329,15 @@ datum/design/nanopaste
 	build_type = PROTOLATHE
 	materials = list("$metal" = 7000, "$glass" = 7000)
 	build_path = "/obj/item/stack/nanopaste"
+
+datum/design/suitpaste
+	name = "suitpaste"
+	desc = "A tube of paste containing swarms of repair nanites. Very effective in constructing space suit from ordinary clothing."
+	id = "suitpaste"
+	req_tech = list("materials" = 6, "engineering" = 3, "biotech" = 3)
+	build_type = PROTOLATHE
+	materials = list("$metal" = 7000, "$glass" = 7000, "$gold" = 1000, "$silver" = 2000, "$diamond" = 400)
+	build_path = "/obj/item/stack/suitpaste"
 /////////////////////////////////////////
 /////////////////Weapons/////////////////
 /////////////////////////////////////////

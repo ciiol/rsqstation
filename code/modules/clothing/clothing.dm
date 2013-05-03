@@ -109,6 +109,13 @@ BLIND     // can't see anything
 	slot_flags = SLOT_OCLOTHING
 	var/blood_overlay_type = "suit"
 
+/obj/item/clothing/suit/attackby(obj/item/I, mob/user)
+	if(istype(I, /obj/item/stack/suitpaste))
+		var/obj/item/stack/suitpaste/P = I
+		P.transform(src, user)
+		return
+	..()
+
 //Spacesuit
 //Note: Everything in modules/clothing/spacesuits should have the entire suit grouped together.
 //      Meaning the the suit is defined directly after the corrisponding helmet. Just like below!
