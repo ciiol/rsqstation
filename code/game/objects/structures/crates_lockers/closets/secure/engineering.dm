@@ -106,6 +106,7 @@
 			new /obj/item/weapon/storage/backpack/satchel_eng(src)
 		new /obj/item/clothing/under/rank/engineer(src)
 		new /obj/item/clothing/shoes/orange(src)
+		new /obj/item/clothing/head/hardhat(src)
 		new /obj/item/weapon/storage/toolbox/mechanical(src)
 //		new /obj/item/weapon/cartridge/engineering(src)
 		new /obj/item/device/radio/headset/headset_eng(src)
