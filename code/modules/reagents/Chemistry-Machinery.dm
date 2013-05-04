@@ -19,6 +19,10 @@
 	"sodium","aluminum","silicon","phosphorus","sulfur","chlorine","potassium","iron",
 	"copper","mercury","radium","water","ethanol","sugar","sacid","tungsten")
 
+/obj/machinery/chem_dispenser/rnd
+	dispensable_reagents = list("hydrogen","lithium","carbon","nitrogen","oxygen",
+	"sodium","phosphorus","chlorine","potassium","iron","mercury","sacid","tungsten")
+
 /obj/machinery/chem_dispenser/proc/recharge()
 	if(stat & (BROKEN|NOPOWER)) return
 	var/addenergy = 2
