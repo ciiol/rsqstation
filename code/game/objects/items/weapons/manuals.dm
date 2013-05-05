@@ -614,7 +614,8 @@
 
 /obj/item/weapon/book/manual/map
 	name = "Station map"
-	icon_state ="book1"
+	icon = 'icons/obj/wizard.dmi'
+	icon_state = "scroll"
 	author = "Red Squadron corp."
 	title = "Map"
 	dat = {"
@@ -623,7 +624,7 @@
 		</head>
 
 		<body>
-		<iframe width='100%' height='97%' src="http://wiki.ss13.ciiol.net/Map" frameborder="0" id="main_frame"></iframe>		</body>
+		<iframe width='100%' height='97%' src="http://wiki.ss13.ciiol.net/Map?printable" frameborder="0" id="main_frame"></iframe>		</body>
 
 		</html>
 
