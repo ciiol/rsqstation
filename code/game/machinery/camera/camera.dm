@@ -72,11 +72,9 @@
 					cameranet.addCamera(src)
 			for(var/mob/O in mob_list)
 				if (istype(O.machine, /obj/machinery/computer/security))
-					var/obj/machinery/computer/security/S = O.machine
-					if (S.current == src)
-						O.unset_machine()
-						O.reset_view(null)
-						O << "The screen bursts into static."
+					O.unset_machine()
+					O.reset_view(null)
+					O << "The screen bursts into static."
 			..()
 
 
@@ -155,10 +153,8 @@
 			O << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", itemname, info), text("window=[]", itemname))
 		for(var/mob/O in player_list)
 			if (istype(O.machine, /obj/machinery/computer/security))
-				var/obj/machinery/computer/security/S = O.machine
-				if (S.current == src)
-					O << "[U] holds \a [itemname] up to one of the cameras ..."
-					O << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", itemname, info), text("window=[]", itemname))
+				O << "[U] holds \a [itemname] up to one of the cameras ..."
+				O << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", itemname, info), text("window=[]", itemname))
 	else if (istype(W, /obj/item/weapon/camera_bug))
 		if (!src.can_use())
 			user << "\blue Camera non-functional"
@@ -195,16 +191,6 @@
 			playsound(src.loc, 'sound/items/Wirecutter.ogg', 100, 1)
 			icon_state = initial(icon_state)
 			add_hiddenprint(user)
-	// now disconnect anyone using the camera
-	//Apparently, this will disconnect anyone even if the camera was re-activated.
-	//I guess that doesn't matter since they can't use it anyway?
-	for(var/mob/O in player_list)
-		if (istype(O.machine, /obj/machinery/computer/security))
-			var/obj/machinery/computer/security/S = O.machine
-			if (S.current == src)
-				O.unset_machine()
-				O.reset_view(null)
-				O << "The screen bursts into static."
 
 /obj/machinery/camera/proc/triggerCameraAlarm()
 	alarm_on = 1

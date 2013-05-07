@@ -6,11 +6,15 @@
 	desc = "Used to access the various cameras on the station."
 	icon_state = "cameras"
 	circuit = "/obj/item/weapon/circuitboard/security"
-	var/obj/machinery/camera/current = null
+	var/mob/aiEye/eyeobj = null
 	var/last_pic = 1.0
 	var/list/network = list("SS13")
 	var/mapping = 0//For the overview file, interesting bit of code.
 
+	New()
+		eyeobj = new/mob/aiEye
+		eyeobj.loc = loc
+		..()
 
 	attack_ai(var/mob/user as mob)
 		return attack_hand(user)
@@ -21,9 +25,10 @@
 
 
 	check_eye(var/mob/user as mob)
-		if ((get_dist(user, src) > 1 || !( user.canmove ) || user.blinded || !( current ) || !( current.status )) && (!istype(user, /mob/living/silicon)))
+		if ((get_dist(user, src) > 1 || !( user.canmove ) || user.blinded) && (!istype(user, /mob/living/silicon)))
+			user.unset_machine()
 			return null
-		user.reset_view(current)
+		user.sight |= SEE_TURFS|SEE_MOBS|SEE_OBJS
 		return 1
 
 
@@ -36,49 +41,22 @@
 		if(!isAI(user))
 			user.set_machine(src)
 
-		var/list/L = list()
-		for (var/obj/machinery/camera/C in cameranet.cameras)
-			L.Add(C)
-
-		camera_sort(L)
-
-		var/list/D = list()
-		D["Cancel"] = "Cancel"
-		for(var/obj/machinery/camera/C in L)
-			var/list/tempnetwork = C.network&network
-			if(tempnetwork.len)
-				D[text("[][]", C.c_tag, (C.status ? null : " (Deactivated)"))] = C
-
-		var/t = input(user, "Which camera should you change to?") as null|anything in D
-		if(!t)
-			user.unset_machine()
+		if ((get_dist(user, src) > 1 || user.machine != src || user.blinded || !( user.canmove )) && (!istype(user, /mob/living/silicon/ai)))
 			return 0
+		else
+			cameranet.visibility(eyeobj)
+			user.client.eye = eyeobj
+			eyeobj.ai = user
+			use_power(50)
 
-		var/obj/machinery/camera/C = D[t]
-
-		if(t == "Cancel")
-			user.unset_machine()
-			return 0
-
-		if(C)
-			if ((get_dist(user, src) > 1 || user.machine != src || user.blinded || !( user.canmove ) || !( C.can_use() )) && (!istype(user, /mob/living/silicon/ai)))
-				if(!C.can_use() && !isAI(user))
-					src.current = null
-				return 0
-			else
-				if(isAI(user))
-					var/mob/living/silicon/ai/A = user
-					A.eyeobj.setLoc(get_turf(C))
-					A.client.eye = A.eyeobj
-				else
-					src.current = C
-					use_power(50)
-
-				spawn(5)
-					attack_hand(user)
-		return
-
-
+/client/proc/SCameraMove(n, direct, var/mob/aiEye/eyeobj)
+	// Simpified version of AIMove
+	var/initial = 20
+	for(var/i = 0; i < initial; i += 20)
+		var/turf/step = get_turf(get_step(eyeobj, direct))
+		if(step)
+			eyeobj.loc = step
+			cameranet.visibility(eyeobj)
 
 /obj/machinery/computer/security/telescreen
 	name = "Telescreen"

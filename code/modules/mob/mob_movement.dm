@@ -241,6 +241,8 @@
 
 	if(isAI(mob))	return AIMove(n,direct,mob)
 
+	if(istype(eye, /mob/aiEye))	return SCameraMove(n,direct,eye)
+
 	if(mob.monkeyizing)	return//This is sota the goto stop mobs from moving var
 
 	if(isliving(mob))
