@@ -476,6 +476,7 @@ its easier to just keep the beam vertical.
 		// make floor wet
 		T.wet=1
 		newblood.blood_DNA[M.dna.unique_enzymes] = M.dna.b_type
+		blood_DNA[M.dna.unique_enzymes] = M.dna.b_type
 		/*for(var/datum/disease/D in M.viruses)
 			var/datum/disease/newDisease = D.Copy(1)
 			newblood.viruses += newDisease
