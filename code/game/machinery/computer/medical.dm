@@ -114,6 +114,7 @@
 				else
 		else
 			dat += text("<A href='?src=\ref[];login=1'>{Log In}</A>", src)
+	dat = to_unicode(dat)
 	user << browse(text("<HEAD><TITLE>Medical Records</TITLE></HEAD><TT>[]</TT>", dat), "window=med_rec")
 	onclose(user, "med_rec")
 	return
@@ -435,6 +436,7 @@
 					else
 						P.info += "<B>Medical Record Lost!</B><BR>"
 					P.info += "</TT>"
+					P.info = to_unicode(P.info)
 					P.name = "paper- 'Medical Record'"
 					src.printing = null
 
@@ -475,3 +477,7 @@
 	name = "Medical Laptop"
 	desc = "Cheap Nanotrasen Laptop."
 	icon_state = "medlaptop"
+
+/obj/machinery/computer/med_data/detective_computer
+	icon = 'icons/obj/computer.dmi'
+	icon_state = "messyfiles"

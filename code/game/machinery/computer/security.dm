@@ -186,6 +186,7 @@
 				else
 		else
 			dat += text("<A href='?src=\ref[];choice=Log In'>{Log In}</A>", src)
+	dat = to_unicode(dat)
 	user << browse(text("<HEAD><TITLE>Security Records</TITLE></HEAD><TT>[]</TT>", dat), "window=secure_rec;size=600x400")
 	onclose(user, "secure_rec")
 	return
@@ -338,6 +339,7 @@ What a mess.*/
 					else
 						P.info += "<B>Security Record Lost!</B><BR>"
 					P.info += "</TT>"
+					P.info = to_unicode(P.info)
 					P.name = "paper - 'Security Record'"
 					printing = null
 //RECORD DELETE
