@@ -20,8 +20,6 @@
 	if (vary)
 		S.frequency = rand(32000, 55000)
 
-		for(var/mob/living/M in viewers(src))
-			M << 'TargetOff.ogg'
 	for (var/mob/M in viewers(source))       // Plays for people in range.
 		var/mob/M2 = locate(/mob/, M)
 		if (M2 && M2.client)
