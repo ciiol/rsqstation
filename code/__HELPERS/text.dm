@@ -34,12 +34,15 @@
 			index = findtext(t, char)
 	return t
 
-/proc/fix_russian(var/t, unicode = 0)
+/proc/fix_russian(var/t, unicode = 0, simple = 0)
 	var/problem_letters
-	if(!unicode)
-		problem_letters = list("ÿ"="&#255;")
+	if(!simple)
+		if(!unicode)
+			problem_letters = list("ÿ"="&#255;")
+		else
+			problem_letters = list("ÿ"="&#1103;")
 	else
-		problem_letters = list("ÿ"="&#1103;")
+		problem_letters = list("ÿ"="ß")
 	for(var/char in problem_letters)
 		var/index = findtext(t, char)
 		while(index)

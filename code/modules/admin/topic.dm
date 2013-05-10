@@ -68,7 +68,7 @@
 		var/banckey = href_list["dbbanaddckey"]
 		var/banduration = text2num(href_list["dbbaddduration"])
 		var/banjob = href_list["dbbanaddjob"]
-		var/banreason = sanitize(href_list["dbbanreason"])
+		var/banreason = fix_russian(href_list["dbbanreason"], 0, 1)
 
 		banckey = ckey(banckey)
 
@@ -336,12 +336,12 @@
 				mins = min(525599,mins)
 				minutes = CMinutes + mins
 				duration = GetExp(minutes)
-				reason = sanitize(input(usr,"Reason?","reason",reason2) as text|null)
+				reason = fix_russian(input(usr,"Reason?","reason",reason2) as text|null, 0, 1)
 				if(!reason)	return
 			if("No")
 				temp = 0
 				duration = "Perma"
-				reason = sanitize(input(usr,"Reason?","reason",reason2) as text|null)
+				reason = fix_russian(input(usr,"Reason?","reason",reason2) as text|null, 0, 1)
 				if(!reason)	return
 
 		log_admin("[key_name(usr)] edited [banned_key]'s ban. Reason: [reason] Duration: [duration]")
@@ -689,7 +689,7 @@
 					var/mins = input(usr,"How long (in minutes)?","Ban time",1440) as num|null
 					if(!mins)
 						return
-					var/reason = sanitize(input(usr,"Reason?","Please State Reason","") as text|null)
+					var/reason = fix_russian(input(usr,"Reason?","Please State Reason","") as text|null, 0, 1)
 					if(!reason)
 						return
 
@@ -713,7 +713,7 @@
 					href_list["jobban2"] = 1 // lets it fall through and refresh
 					return 1
 				if("No")
-					var/reason = sanitize(input(usr,"Reason?","Please State Reason","") as text|null)
+					var/reason = fix_russian(input(usr,"Reason?","Please State Reason","") as text|null, 0, 1)
 					if(reason)
 						var/msg
 						for(var/job in notbannedlist)
@@ -823,7 +823,7 @@
 				if(!mins)
 					return
 				if(mins >= 525600) mins = 525599
-				var/reason = sanitize(input(usr,"Reason?","reason","Griefer") as text|null)
+				var/reason = fix_russian(input(usr,"Reason?","reason","Griefer") as text|null, 0, 1)
 				if(!reason)
 					return
 				AddBan(M.ckey, M.computer_id, reason, usr.ckey, 1, mins)
@@ -843,7 +843,7 @@
 				del(M.client)
 				//del(M)	// See no reason why to delete mob. Important stuff can be lost. And ban can be lifted before round ends.
 			if("No")
-				var/reason = sanitize(input(usr,"Reason?","reason","Griefer") as text|null)
+				var/reason = fix_russian(input(usr,"Reason?","reason","Griefer") as text|null, 0, 1)
 				if(!reason)
 					return
 				switch(alert(usr,"IP ban?",,"Yes","No","Cancel"))
