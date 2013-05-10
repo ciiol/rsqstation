@@ -297,6 +297,30 @@ datum/shuttle_controller
 								D.close()
 								D.locked = 1
 
+						start_location = locate(/area/shuttle/escape_pod1/station)
+						for(var/obj/machinery/door/unpowered/shuttle/D in start_location)
+							spawn(0)
+								D.close()
+								D.locked = 1
+
+						start_location = locate(/area/shuttle/escape_pod2/station)
+						for(var/obj/machinery/door/unpowered/shuttle/D in start_location)
+							spawn(0)
+								D.close()
+								D.locked = 1
+
+						start_location = locate(/area/shuttle/escape_pod3/station)
+						for(var/obj/machinery/door/unpowered/shuttle/D in start_location)
+							spawn(0)
+								D.close()
+								D.locked = 1
+
+						start_location = locate(/area/shuttle/escape_pod5/station)
+						for(var/obj/machinery/door/unpowered/shuttle/D in start_location)
+							spawn(0)
+								D.close()
+								D.locked = 1
+
 					if(timeleft>0)
 						return 0
 
