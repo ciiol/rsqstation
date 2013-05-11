@@ -207,13 +207,14 @@ var/list/slot_equipment_priority = list( \
 			client.perspective = EYE_PERSPECTIVE
 			client.eye = A
 		else
+			if (istype(client.eye, /mob/aiEye) && istype(A, /mob/aiEye))
+				client.images = initial(client.images) // Try to fix bugs with using aiEye with humans
 			if (isturf(loc))
 				client.eye = client.mob
 				client.perspective = MOB_PERSPECTIVE
 			else
 				client.perspective = EYE_PERSPECTIVE
 				client.eye = loc
-		client.images = initial(client.images) // Try to fix bugs with using aiEye with humans
 	return
 
 
