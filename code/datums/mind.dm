@@ -98,7 +98,7 @@ datum/mind
 			for(var/datum/objective/objective in objectives)
 				output += "<B>Objective #[obj_count]</B>: [objective.explanation_text]"
 				obj_count++
-
+		output = to_unicode(output)
 		recipient << browse(output,"window=memory")
 
 	proc/edit_memory()
