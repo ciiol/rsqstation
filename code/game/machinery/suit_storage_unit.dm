@@ -16,7 +16,7 @@
 	var/obj/item/clothing/head/helmet/space/HELMET = null
 	var/HELMET_TYPE = null
 	var/obj/item/clothing/mask/MASK = null  //All the stuff that's gonna be stored insiiiiiiiiiiiiiiiiiiide, nyoro~n
-	var/MASK_TYPE = null //Erro's idea on standarising SSUs whle keeping creation of other SSU types easy: Make a child SSU, name it something then set the TYPE vars to your desired suit output. New() should take it from there by itself.
+	var/MASK_TYPE = /obj/item/clothing/mask/breath //Erro's idea on standarising SSUs whle keeping creation of other SSU types easy: Make a child SSU, name it something then set the TYPE vars to your desired suit output. New() should take it from there by itself.
 	var/isopen = 0
 	var/islocked = 0
 	var/isUV = 0
@@ -33,7 +33,55 @@
 /obj/machinery/suit_storage_unit/standard_unit
 	SUIT_TYPE = /obj/item/clothing/suit/space
 	HELMET_TYPE = /obj/item/clothing/head/helmet/space
-	MASK_TYPE = /obj/item/clothing/mask/breath
+
+/obj/machinery/suit_storage_unit/prison_unit
+	name = "Prison Suit Storage Unit"
+	req_access = list(access_brig)
+	SUIT_TYPE = /obj/item/clothing/suit/space/rig/prison
+	HELMET_TYPE = /obj/item/clothing/head/helmet/space/rig/prison
+
+/obj/machinery/suit_storage_unit/security_unit
+	name = "Security Suit Storage Unit"
+	req_access = list(access_brig)
+	SUIT_TYPE = /obj/item/clothing/suit/space/rig/security
+	HELMET_TYPE = /obj/item/clothing/head/helmet/space/rig/security
+
+/obj/machinery/suit_storage_unit/mining_unit
+	name = "Mining Suit Storage Unit"
+	req_access = list(access_mining)
+	SUIT_TYPE = /obj/item/clothing/suit/space/rig/mining
+	HELMET_TYPE = /obj/item/clothing/head/helmet/space/rig/mining
+
+/obj/machinery/suit_storage_unit/medical_unit
+	name = "Medical Suit Storage Unit"
+	req_access = list(access_medical)
+	SUIT_TYPE = /obj/item/clothing/suit/space/rig/medical
+	HELMET_TYPE = /obj/item/clothing/head/helmet/space/rig/medical
+
+/obj/machinery/suit_storage_unit/science_unit
+	name = "Science Suit Storage Unit"
+	req_access = list(access_tox)
+	SUIT_TYPE = /obj/item/clothing/suit/space/anomaly
+	HELMET_TYPE = /obj/item/clothing/head/helmet/space/anomaly
+
+/obj/machinery/suit_storage_unit/engineering
+	name = "Engineering Suit Storage Unit"
+	req_access = list(access_engine)
+	SUIT_TYPE = /obj/item/clothing/suit/space/rig
+	HELMET_TYPE = /obj/item/clothing/head/helmet/space/rig
+
+/obj/machinery/suit_storage_unit/atmos_unit
+	name = "Atmos Suit Storage Unit"
+	req_access = list(access_atmospherics)
+	SUIT_TYPE = /obj/item/clothing/suit/space/rig/atmos
+	HELMET_TYPE = /obj/item/clothing/head/helmet/space/rig/atmos
+
+/obj/machinery/suit_storage_unit/elite_unit
+	name = "Elite Suit Storage Unit"
+	req_access = list(access_ce)
+	SUIT_TYPE = /obj/item/clothing/suit/space/rig/elite
+	HELMET_TYPE = /obj/item/clothing/head/helmet/space/rig/elite
+
 
 
 /obj/machinery/suit_storage_unit/New()
@@ -129,13 +177,19 @@
 			if(src.OCCUPANT)
 				dat+= "<HR><B><font color ='red'>WARNING: Biological entity detected inside the Unit's storage. Please remove.</B></font><BR>"
 				dat+= "<A href='?src=\ref[src];eject_guy=1'>Eject extra load</A>"
-			dat+= text("<HR><font color='black'>Unit is: [] - <A href='?src=\ref[];toggle_open=1'>[] Unit</A></font> ",(src.isopen ? "Open" : "Closed"),src,(src.isopen ? "Close" : "Open"))
-			if(src.isopen)
-				dat+="<HR>"
+			dat+= text("<HR><font color='black'>Unit is: [] - </font>",(src.isopen ? "Open" : "Closed"))
+			if((istype(user, /mob/living/carbon) && check_access(user:wear_id)) || istype(user, /mob/living/silicon) || !safetieson)
+				dat+= text("<A href='?src=\ref[];toggle_open=1'>[] Unit</A> ",src,(src.isopen ? "Close" : "Open"))
+				if(src.isopen)
+					dat+="<HR>"
+				else
+					dat+= text(" - <A href='?src=\ref[];toggle_lock=1'><font color ='orange'>*[] Unit*</A></font><HR>",src,(src.islocked ? "Unlock" : "Lock") )
+				dat+= text("Unit status: []",(src.islocked? "<font color ='red'><B>**LOCKED**</B></font><BR>" : "<font color ='green'><B>**UNLOCKED**</B></font><BR>") )
+				dat+= text("<A href='?src=\ref[];start_UV=1'>Start Disinfection cycle</A><BR>",src)
 			else
-				dat+= text(" - <A href='?src=\ref[];toggle_lock=1'><font color ='orange'>*[] Unit*</A></font><HR>",src,(src.islocked ? "Unlock" : "Lock") )
-			dat+= text("Unit status: []",(src.islocked? "<font color ='red'><B>**LOCKED**</B></font><BR>" : "<font color ='green'><B>**UNLOCKED**</B></font><BR>") )
-			dat+= text("<A href='?src=\ref[];start_UV=1'>Start Disinfection cycle</A><BR>",src)
+				dat+= "<font color ='orange'>Not allowed</font><HR>"
+				dat+= text("Unit status: []",(src.islocked? "<font color ='red'><B>**LOCKED**</B></font><BR>" : "<font color ='green'><B>**UNLOCKED**</B></font><BR>") )
+
 			dat += text("<BR><BR><A href='?src=\ref[];mach_close=suit_storage_unit'>Close control panel</A>", user)
 			//user << browse(dat, "window=Suit Storage Unit;size=400x500")
 			//onclose(user, "Suit Storage Unit")
