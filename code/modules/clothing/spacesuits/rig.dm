@@ -76,6 +76,20 @@
 	desc = "A special suit that protects against hazardous, low pressure environments. Has reinforced plating."
 	item_state = "mining_hardsuit"
 
+/obj/item/clothing/head/helmet/space/rig/prison
+	name = "proson hardsuit helmet"
+	desc = "A special helmet designed for work in a low pressure environment."
+	icon_state = "rad"
+	item_state = "mining_helm"
+	color = "mining"
+	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 0)
+
+/obj/item/clothing/suit/space/rig/prison
+	icon_state = "rad_old"
+	name = "prison hardsuit"
+	desc = "A special suit that protects against low pressure environments."
+	item_state = "mining_hardsuit"
+	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 0)
 
 
 //Syndicate rig
