@@ -213,6 +213,7 @@ var/list/slot_equipment_priority = list( \
 			else
 				client.perspective = EYE_PERSPECTIVE
 				client.eye = loc
+		client.images = initial(client.images) // Try to fix bugs with using aiEye with humans
 	return
 
 

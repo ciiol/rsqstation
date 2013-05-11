@@ -7,13 +7,13 @@
 	icon_state = "cameras"
 	circuit = "/obj/item/weapon/circuitboard/security"
 	var/mob/aiEye/eyeobj = null
+	var/turf/lastpos = null
 	var/last_pic = 1.0
 	var/list/network = list("SS13")
 	var/mapping = 0//For the overview file, interesting bit of code.
 
 	New()
-		eyeobj = new/mob/aiEye
-		eyeobj.loc = loc
+		lastpos = loc
 		..()
 
 	attack_ai(var/mob/user as mob)
@@ -31,6 +31,11 @@
 		user.sight |= SEE_TURFS|SEE_MOBS|SEE_OBJS
 		return 1
 
+	process()
+		if (eyeobj && eyeobj.ai && eyeobj.ai.machine != src)
+			lastpos = eyeobj.loc
+			eyeobj.Del()
+		..()
 
 	attack_hand(var/mob/user as mob)
 		if (src.z > 6)
@@ -44,9 +49,13 @@
 		if ((get_dist(user, src) > 1 || user.machine != src || user.blinded || !( user.canmove )) && (!istype(user, /mob/living/silicon/ai)))
 			return 0
 		else
+			if (!eyeobj)
+				eyeobj = new/mob/aiEye
+				eyeobj.loc = lastpos
 			cameranet.visibility(eyeobj)
 			user.client.eye = eyeobj
 			eyeobj.ai = user
+			cameranet.visibility(eyeobj)
 			use_power(50)
 
 /client/proc/SCameraMove(n, direct, var/mob/aiEye/eyeobj)
