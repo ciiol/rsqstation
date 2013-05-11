@@ -1,4 +1,4 @@
-/mob/verb/pray(msg as text)
+/mob/verb/pray(omsg as text)
 	set category = "IC"
 	set name = "Pray"
 
@@ -6,8 +6,7 @@
 		usr << "\red Speech is currently admin-disabled."
 		return
 
-	var/omsg = copytext(sanitize(msg), 1, MAX_MESSAGE_LEN)
-	msg = omsg
+	var/msg = copytext(sanitize(omsg), 1, MAX_MESSAGE_LEN)
 	if(!msg)	return
 
 	if(usr.client)
