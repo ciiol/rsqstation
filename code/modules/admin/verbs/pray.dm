@@ -6,7 +6,8 @@
 		usr << "\red Speech is currently admin-disabled."
 		return
 
-	msg = copytext(sanitize(msg), 1, MAX_MESSAGE_LEN)
+	var/omsg = copytext(sanitize(msg), 1, MAX_MESSAGE_LEN)
+	msg = omsg
 	if(!msg)	return
 
 	if(usr.client)
@@ -19,12 +20,20 @@
 	var/image/cross = image('icons/obj/storage.dmi',"bible")
 	msg = "\blue \icon[cross] <b><font color=purple>PRAY: </font>[key_name(src, 1)] (<A HREF='?_src_=holder;adminmoreinfo=\ref[src]'>?</A>) (<A HREF='?_src_=holder;adminplayeropts=\ref[src]'>PP</A>) (<A HREF='?_src_=vars;Vars=\ref[src]'>VV</A>) (<A HREF='?_src_=holder;subtlemessage=\ref[src]'>SM</A>) (<A HREF='?_src_=holder;adminplayerobservejump=\ref[src]'>JMP</A>) (<A HREF='?_src_=holder;secretsadmin=check_antagonist'>CA</A>) (<A HREF='?_src_=holder;adminspawncookie=\ref[src]'>SC</a>):</b> [msg]"
 
+	if(istype(src, /mob/living/carbon/human))
+		var/mob/living/carbon/human/H = src
+		H.whisper(omsg)
+
+	var/received = 0
 	for(var/client/C in admins)
 		if((R_ADMIN|R_MOD) & C.holder.rights)
 			if(C.prefs.toggles & CHAT_PRAYER)
+				received = 1
 				C << 'sound/effects/adminhelp.ogg'
 				C << msg
-	usr << "Your prayers have been received by the gods."
+
+	if(received)
+		usr << "Your prayers have been received by the gods."
 
 	feedback_add_details("admin_verb","PR") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	//log_admin("HELP: [key_name(src)]: [msg]")
