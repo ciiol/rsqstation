@@ -235,7 +235,61 @@
 	throwforce = 0
 	w_class = 3.0
 	origin_tech = "materials=1"
-	var/breakouttime = 300	//Deciseconds = 30s = 0.5 minute
+	var/breakouttime = 1200	//Deciseconds = 30s = 0.5 minute
+
+/obj/item/weapon/legcuffs/attack(mob/living/carbon/C as mob, mob/user as mob)
+	if ((CLUMSY in usr.mutations) && prob(50))
+		usr << "\red Uh ... how do those things work?!"
+		if (istype(C, /mob/living/carbon/human))
+			if(!C.legcuffed)
+				var/obj/effect/equip_e/human/O = new /obj/effect/equip_e/human(  )
+				O.source = user
+				O.target = user
+				O.item = user.get_active_hand()
+				O.s_loc = user.loc
+				O.t_loc = user.loc
+				O.place = "legcuff"
+				C.requests += O
+				spawn( 0 )
+					O.process()
+			return
+		return
+	if (!(istype(usr, /mob/living/carbon/human) || ticker) && ticker.mode.name != "monkey")
+		usr << "\red You don't have the dexterity to do this!"
+		return
+	if (istype(C, /mob/living/carbon/human))
+		if(!C.legcuffed)
+			C.attack_log += text("\[[time_stamp()]\] <font color='orange'>Has been legcuffed (attempt) by [user.name] ([user.ckey])</font>")
+			user.attack_log += text("\[[time_stamp()]\] <font color='red'>Attempted to legcuff [C.name] ([C.ckey])</font>")
+			log_attack("<font color='red'>[user.name] ([user.ckey]) Attempted to legcuff [C.name] ([C.ckey])</font>")
+			var/obj/effect/equip_e/human/O = new /obj/effect/equip_e/human(  )
+
+			O.source = user
+			O.target = C
+			O.item = user.get_active_hand()
+			O.s_loc = user.loc
+			O.t_loc = C.loc
+			O.place = "legcuff"
+			C.requests += O
+			spawn( 0 )
+				playsound(src.loc, 'sound/weapons/handcuffs.ogg', 30, 1, -2)
+				O.process()
+		return
+	else
+		if(!C.legcuffed)
+			var/obj/effect/equip_e/monkey/O = new /obj/effect/equip_e/monkey(  )
+			O.source = user
+			O.target = C
+			O.item = user.get_active_hand()
+			O.s_loc = user.loc
+			O.t_loc = C.loc
+			O.place = "legcuff"
+			C.requests += O
+			spawn( 0 )
+				playsound(src.loc, 'sound/weapons/handcuffs.ogg', 30, 1, -2)
+				O.process()
+		return
+
 
 /obj/item/weapon/legcuffs/beartrap
 	name = "bear trap"
@@ -244,6 +298,7 @@
 	icon_state = "beartrap0"
 	desc = "A trap used to catch bears and other legged creatures."
 	var/armed = 0
+	breakouttime = 300	//Deciseconds = 30s = 0.5 minute
 
 	suicide_act(mob/user)
 		viewers(user) << "\red <b>[user] is putting the [src.name] on \his head! It looks like \he's trying to commit suicide.</b>"

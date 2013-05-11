@@ -260,7 +260,20 @@
 		new /obj/item/clothing/shoes/orange( src )
 		return
 
+/obj/structure/closet/secure_closet/prison_miners
+	name = "Prison Miner Locker"
+	req_access = list(access_brig)
+	anchored = 1
+	var/id = null
 
+	New()
+		new /obj/item/weapon/storage/backpack/industrial(src)
+		new /obj/item/weapon/storage/bag/ore(src)
+		new /obj/item/clothing/glasses/meson(src)
+		new /obj/item/weapon/shovel(src)
+		new /obj/item/weapon/pickaxe(src)
+		new /obj/item/weapon/legcuffs(src)
+		return
 
 /obj/structure/closet/secure_closet/courtroom
 	name = "Courtroom Locker"
