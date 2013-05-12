@@ -444,6 +444,7 @@ var/global/list/obj/item/device/pda/PDAs = list()
 				dat += cart
 
 	dat += "</body></html>"
+	dat = to_unicode(dat)
 	user << browse(dat, "window=pda;size=400x444;border=1;can_resize=1;can_close=0;can_minimize=0")
 	onclose(user, "pda", src)
 
