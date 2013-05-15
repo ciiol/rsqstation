@@ -783,8 +783,15 @@ var/global/list/obj/item/device/pda/PDAs = list()
 		else
 			L = get(P, /mob/living/silicon)
 
+		U << "\icon[P] <b>Message to [P.owner] ([P.ownjob]), </b>\"[t]\""
 		if(L)
 			L << "\icon[P] <b>Message from [src.owner] ([ownjob]), </b>\"[t]\" (<a href='byond://?src=\ref[P];choice=Message;skiprefresh=1;target=\ref[src]'>Reply</a>)"
+
+		var/observer_msg = "<i>PDA message from <b>[U.name]</b> to <b>[P.name]</b>:</i> \"[t]\""
+		if (src.owner != U)
+			observer_msg = "<i>PDA message from <b>[U.name]</b> ([src.name]) to <b>[P.name]</b>:</i> \"[t]\""
+		for(var/mob/dead/observer/G in world)
+			G.show_message(observer_msg)
 
 		log_pda("[usr] (PDA: [src.name]) sent \"[t]\" to [P.name]")
 		P.overlays.Cut()
