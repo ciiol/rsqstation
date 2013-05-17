@@ -63,7 +63,7 @@
 
 /area/proc/close_firedoors()
 	for(var/obj/machinery/door/firedoor/D in all_doors)
-		if(!D.welded)
+		if(!D.blocked)
 			if(D.operating)
 				D.nextstate = CLOSED
 			else if(!D.density)
@@ -72,7 +72,7 @@
 
 /area/proc/open_firedoors()
 	for(var/obj/machinery/door/firedoor/D in all_doors)
-		if(!D.welded)
+		if(!D.blocked)
 			if(D.operating)
 				D.nextstate = OPEN
 			else if(D.density)
@@ -167,7 +167,7 @@
 		mouse_opacity = 0
 		updateicon()
 		for(var/obj/machinery/door/firedoor/D in src)
-			if(!D.welded)
+			if(!D.blocked)
 				if(D.operating)
 					D.nextstate = OPEN
 				else if(D.density)

@@ -12,7 +12,7 @@
 	layer_close = 3.11 // Over other doors when closed
 
 	var/locked = 0
-	var/welded = 0
+	var/blocked = 0
 	var/autoclose_time = 20
 	var/nextstate = null
 	var/net_id
@@ -91,14 +91,14 @@
 		if(istype(C, /obj/item/weapon/weldingtool))
 			var/obj/item/weapon/weldingtool/W = C
 			if(W.remove_fuel(0, user))
-				welded = !welded
-				user.visible_message("\red \The [user] [welded ? "welds" : "unwelds"] \the [src] with \a [W].",\
-				"You [welded ? "weld" : "unweld"] \the [src] with \the [W].",\
+				blocked = !blocked
+				user.visible_message("\red \The [user] [blocked ? "welds" : "unwelds"] \the [src] with \a [W].",\
+				"You [blocked ? "weld" : "unweld"] \the [src] with \the [W].",\
 				"You hear something being welded.")
 				update_icon()
 				return
 
-		if(welded)
+		if(blocked)
 			user << "\red \The [src] is welded solid!"
 			return
 
@@ -111,7 +111,7 @@
 		if( istype(C, /obj/item/weapon/crowbar) || ( istype(C,/obj/item/weapon/twohanded/fireaxe) && C:wielded == 1 ) )
 			if(operating)
 				return
-			if( welded && istype(C, /obj/item/weapon/crowbar) )
+			if( blocked && istype(C, /obj/item/weapon/crowbar) )
 				user.visible_message("\red \The [user] pries at \the [src] with \a [C], but \the [src] is welded in place!",\
 				"You try to pry \the [src] [density ? "open" : "closed"], but it is welded in place!",\
 				"You hear someone struggle and metal straining.")
@@ -131,8 +131,8 @@
 					"You hear someone struggling and metal straining")
 					return
 			else
-				user.visible_message("\red \The [user] forces \the [ welded ? "welded" : "" ] [src] [density ? "open" : "closed"] with \a [C]!",\
-					"You force \the [ welded ? "welded" : "" ] [src] [density ? "open" : "closed"] with \the [C]!",\
+				user.visible_message("\red \The [user] forces \the [ blocked ? "welded" : "" ] [src] [density ? "open" : "closed"] with \a [C]!",\
+					"You force \the [ blocked ? "welded" : "" ] [src] [density ? "open" : "closed"] with \the [C]!",\
 					"You hear metal strain and groan, and a door [density ? "open" : "close"].")
 			if(density)
 				spawn(0)
@@ -233,11 +233,11 @@
 		overlays.Cut()
 		if(density)
 			icon_state = "door_closed"
-			if(welded)
+			if(blocked)
 				overlays += "welded"
 		else
 			icon_state = "door_open"
-			if(welded)
+			if(blocked)
 				overlays += "welded_open"
 		return
 
