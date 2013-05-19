@@ -208,6 +208,9 @@
 			Weaken(3)
 			emote("collapse")
 
+		if ((mHallucination in mutations) && prob(25))
+			hallucination = 30
+
 		if (radiation)
 			if (radiation > 100)
 				radiation = 100
