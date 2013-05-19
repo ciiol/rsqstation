@@ -209,7 +209,7 @@
 			emote("collapse")
 
 		if ((mHallucination in mutations) && prob(25))
-			hallucination = 30
+			hallucination = max(30, hallucination)
 
 		if (radiation)
 			if (radiation > 100)
