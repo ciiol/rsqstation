@@ -534,7 +534,7 @@
 	proc/move()
 		var/obj/structure/disposalpipe/last
 		while(active)
-			if(hasmob && prob(3))
+			if(hasmob && prob(1))
 				for(var/mob/living/H in src)
 					H.take_overall_damage(20, 0, "Blunt Trauma")//horribly maim any living creature jumping down disposals.  c'est la vie
 
