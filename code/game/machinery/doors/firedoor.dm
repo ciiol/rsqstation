@@ -67,6 +67,7 @@
 				if(mecha.occupant && (src.allowed(mecha.occupant) || src.check_access_list(mecha.operation_req_access)))
 					spawn(autoclose_time)
 						nextstate = CLOSED
+						latetoggle()
 					open()
 			return
 		return 0
@@ -75,6 +76,7 @@
 	power_change()
 		if(powered(ENVIRON))
 			stat &= ~NOPOWER
+			latetoggle()
 		else
 			stat |= NOPOWER
 		return
@@ -138,6 +140,7 @@
 				spawn(0)
 					spawn(autoclose_time)
 						nextstate = CLOSED
+						latetoggle()
 					open()
 			else
 				spawn(0)
@@ -188,37 +191,15 @@
 			"\The [src] [density ? "open" : "close"]s.",\
 			"You hear a beep, and a door opening.")
 
-		var/needs_to_close = 0
 		if(density)
-			if(alarmed)
-				needs_to_close = 1
 			spawn()
 				spawn(autoclose_time)
 					nextstate = CLOSED
+					latetoggle()
 				open()
 		else
 			spawn()
 				close()
-
-		if(needs_to_close)
-			spawn(50)
-				if(alarmed)
-					nextstate = CLOSED
-
-
-	process()
-		if(operating || stat & NOPOWER || !nextstate)
-			return
-		switch(nextstate)
-			if(OPEN)
-				spawn()
-					open()
-			if(CLOSED)
-				spawn()
-					close()
-		nextstate = null
-		return
-
 
 	animate(animation)
 		switch(animation)
@@ -239,6 +220,28 @@
 			icon_state = "door_open"
 			if(blocked)
 				overlays += "welded_open"
+		return
+
+	open()
+		..()
+		latetoggle()
+		return
+
+	close()
+		..()
+		latetoggle()
+		return
+
+	proc/latetoggle()
+		if(operating || stat & NOPOWER || !nextstate)
+			return
+		switch(nextstate)
+			if(OPEN)
+				nextstate = null
+				open()
+			if(CLOSED)
+				nextstate = null
+				close()
 		return
 
 
