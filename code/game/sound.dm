@@ -20,7 +20,7 @@
 	if (vary)
 		S.frequency = rand(32000, 55000)
 
-	for (var/mob/M in viewers(source))       // Plays for people in range.
+	for (var/mob/M in hearers(source))       // Plays for people in range.
 		var/mob/M2 = locate(/mob/, M)
 		if (M2 && M2.client)
 			if(M2.ear_deaf <= 0 || !M.ear_deaf)
