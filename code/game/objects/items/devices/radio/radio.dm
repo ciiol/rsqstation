@@ -18,7 +18,7 @@ var/GLOBAL_RADIO_TYPE = 1 // radio type to use
 	var/wires = WIRE_SIGNAL | WIRE_RECEIVE | WIRE_TRANSMIT
 	var/b_stat = 0
 	var/broadcasting = 0
-	var/listening = 0
+	var/listening = 1
 	var/freerange = 0 // 0 - Sanitize frequencies, 1 - Full range
 	var/list/channels = list() //see communications.dm for full list. First channes is a "default" for :h
 	var/subspace_transmission = 0
@@ -38,6 +38,9 @@ var/GLOBAL_RADIO_TYPE = 1 // radio type to use
 	var/const/TRANSMISSION_DELAY = 5 // only 2/second/radio
 	var/const/FREQ_LISTENING = 1
 		//FREQ_BROADCASTING = 2
+
+/obj/item/device/radio/off
+	listening = 0
 
 /obj/item/device/radio
 	var/datum/radio_frequency/radio_connection
