@@ -19,10 +19,10 @@ proc/explosion(turf/epicenter, devastation_range, heavy_impact_range, light_impa
 		epicenter = get_turf(epicenter)
 		if(!epicenter) return
 
-		
+
 		playsound(epicenter, 'sound/effects/explosionfar.ogg', 100, 1, round(devastation_range*2,1) )
 		playsound(epicenter, "explosion", 100, 1, round(devastation_range,1) )
-		
+
 		var/close = range(world.view+round(devastation_range,1), epicenter)
 		// to all distanced mobs play a different sound
 		for(var/mob/M in world) if(M.z == epicenter.z) if(!(M in close))
