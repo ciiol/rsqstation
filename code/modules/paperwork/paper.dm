@@ -172,7 +172,6 @@
 	t = replacetext(t, "\[/large\]", "</font>")
 	t = replacetext(t, "\[sign\]", "<font face=\"[signfont]\"><i>[user.real_name]</i></font>")
 	t = replacetext(t, "\[field\]", "<span class=\"paper_field\"></span>")
-	t = replacetext(t, "ÿ", "&#1103;")
 
 	if(!iscrayon)
 		t = replacetext(t, "\[*\]", "<li>")
@@ -251,6 +250,7 @@
 			return
 
 		t = checkhtml(t)
+		t = fix_russian(t, 1)
 
 		// check for exploits
 		for(var/bad in paper_blacklist)
