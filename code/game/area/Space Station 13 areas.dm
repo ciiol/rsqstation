@@ -699,6 +699,11 @@ proc/process_ghost_teleport_locs()
 	icon_state = "bridge"
 	music = null
 
+/area/bridge/tribunal
+	name = "\improper Tribunal Room"
+	icon_state = "bridge"
+	music = null
+
 /area/crew_quarters/captain
 	name = "\improper Captain's Office"
 	icon_state = "captain"
@@ -784,6 +789,14 @@ proc/process_ghost_teleport_locs()
 /area/crew_quarters/sleep_female/toilet_female
 	name = "\improper Female Toilets"
 	icon_state = "toilet"
+
+/area/crew_quarters/sleep_heads
+	name = "\improper Bridge Dormitories"
+	icon_state = "Sleep"
+
+/area/crew_quarters/sleep
+	name = "\improper Dormitories"
+	icon_state = "Sleep"
 
 /area/crew_quarters/locker
 	name = "\improper Locker Room"
