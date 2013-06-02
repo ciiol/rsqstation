@@ -106,7 +106,7 @@
 				if(!input || !(usr in view(1,src)))
 					return
 				captain_announce(input)//This should really tell who is, IE HoP, CE, HoS, RD, Captain
-				log_say("[key_name(usr)] has made a captain announcement: [input]")
+				log_say("[key_name(usr)] has made a captain announcement: [fix_russian(input)]")
 				message_admins("[key_name_admin(usr)] has made a captain announcement.", 1)
 				message_cooldown = 1
 				spawn(600)//One minute cooldown
