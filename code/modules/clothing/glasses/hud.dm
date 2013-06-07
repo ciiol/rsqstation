@@ -92,13 +92,13 @@
 	var/image/holder
 	for(var/mob/living/carbon/human/perp in view(M))
 		if(!C) continue
-		var/perpname = "wot"
+		var/perpname = perp.name
 		holder = perp.hud_list[ID_HUD]
 		if(perp.wear_id)
 			var/obj/item/weapon/card/id/I = perp.wear_id.GetID()
 			if(I)
 				perpname = I.registered_name
-				holder.icon_state = "hud[ckey(I.GetJobRealName())]"
+				holder.icon_state = "hud[ckey(I.GetJobName())]"
 				C.images += holder
 			else
 				perpname = perp.name

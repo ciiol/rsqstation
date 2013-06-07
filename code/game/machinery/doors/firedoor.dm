@@ -11,7 +11,6 @@
 	layer_open = 2.69  // Under other doors when opened
 	layer_close = 3.11 // Over other doors when closed
 
-	var/locked = 0
 	var/blocked = 0
 	var/autoclose_time = 20
 	var/nextstate = null
@@ -63,13 +62,11 @@
 			return ..()
 		if(istype(AM, /obj/mecha))
 			var/obj/mecha/mecha = AM
-			if(density)
-				if(mecha.occupant && (src.allowed(mecha.occupant) || src.check_access_list(mecha.operation_req_access)))
-					spawn(autoclose_time)
-						nextstate = CLOSED
-						latetoggle()
-					open()
-			return
+			if (mecha.occupant)
+				var/mob/M = mecha.occupant
+				if(world.time - M.last_bumped <= 10) return //Can bump-open one airlock per second. This is to prevent popup message spam.
+				M.last_bumped = world.time
+				attack_hand(M)
 		return 0
 
 

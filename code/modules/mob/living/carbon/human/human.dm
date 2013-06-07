@@ -4,7 +4,7 @@
 	voice_name = "unknown"
 	icon = 'icons/mob/human.dmi'
 	icon_state = "body_m_s"
-	var/list/hud_list = list()
+	var/list/hud_list = list()
 
 
 /mob/living/carbon/human/dummy

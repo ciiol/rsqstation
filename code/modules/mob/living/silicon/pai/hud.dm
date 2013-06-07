@@ -15,7 +15,7 @@
 				var/obj/item/weapon/card/id/I = perp.wear_id.GetID()
 				if(I)
 					perpname = I.registered_name
-					holder.icon_state = "hud[ckey(perp:wear_id:GetJobRealName())]"
+					holder.icon_state = "hud[ckey(perp:wear_id:GetJobName())]"
 					client.images += holder
 				else
 					perpname = perp.name
@@ -28,7 +28,7 @@
 			for(var/datum/data/record/E in data_core.general)
 				if(E.fields["name"] == perpname)
 					holder = perp.hud_list[WANTED_HUD]
-					for (var/datum/data/record/R in data_core.security)
+					for(var/datum/data/record/R in data_core.security)
 						if((R.fields["id"] == E.fields["id"]) && (R.fields["criminal"] == "*Arrest*"))
 							holder.icon_state = "hudwanted"
 							client.images += holder
