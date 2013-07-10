@@ -24,8 +24,12 @@
 	var/heat_proof = 0 // For glass airlocks/opacity firedoors
 	var/air_properties_vary_with_direction = 0
 
+	//Multi-tile doors
+	dir = EAST
+	var/width = 1
+
 /obj/machinery/door/New()
-	..()
+	. = ..()
 	if(density)
 		layer = layer_close //Above most items if closed
 		explosion_resistance = initial(explosion_resistance)
@@ -33,6 +37,16 @@
 	else
 		layer = layer_open //Under all objects if opened. 2.7 due to tables being at 2.6
 		explosion_resistance = 0
+
+
+	if(width > 1)
+		if(dir in list(EAST, WEST))
+			bound_width = width * world.icon_size
+			bound_height = world.icon_size
+		else
+			bound_width = world.icon_size
+			bound_height = width * world.icon_size
+
 	update_nearby_tiles(need_rebuild=1)
 	return
 
@@ -262,6 +276,22 @@
 	if(istype(south)) air_master.tiles_to_update += south
 	if(istype(east)) air_master.tiles_to_update += east
 	if(istype(west)) air_master.tiles_to_update += west
+
+	if(width > 1)
+		var/turf/simulated/next_turf = src
+		var/step_dir = turn(dir, 180)
+		for(var/current_step = 2, current_step <= width, current_step++)
+			next_turf = get_step(src, step_dir)
+			north = get_step(next_turf, step_dir)
+			east = get_step(next_turf, turn(step_dir, 90))
+			south = get_step(next_turf, turn(step_dir, -90))
+
+			update_heat_protection(next_turf)
+
+			if(istype(north)) air_master.tiles_to_update |= north
+			if(istype(south)) air_master.tiles_to_update |= south
+			if(istype(east)) air_master.tiles_to_update |= east
+
 	return 1
 
 /obj/machinery/door/proc/update_heat_protection(var/turf/simulated/source)
@@ -276,6 +306,19 @@
 	if(!A.density && !A.operating && !A.locked && !A.welded && A.autoclose)
 		close()
 	return
+
+/obj/machinery/door/Move(new_loc, new_dir)
+	update_nearby_tiles()
+	. = ..()
+	if(width > 1)
+		if(dir in list(EAST, WEST))
+			bound_width = width * world.icon_size
+			bound_height = world.icon_size
+		else
+			bound_width = world.icon_size
+			bound_height = width * world.icon_size
+
+	update_nearby_tiles()
 
 /obj/machinery/door/morgue
 	icon = 'icons/obj/doors/doormorgue.dmi'

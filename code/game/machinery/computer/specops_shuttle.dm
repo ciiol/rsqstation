@@ -77,6 +77,12 @@ var/specops_shuttle_timeleft = 0
 		if(istype(T, /turf/simulated))
 			del(T)
 
+	for(var/mob/living/carbon/bug in end_location) // If someone somehow is still in the shuttle's docking area...
+		bug.gib()
+
+	for(var/mob/living/simple_animal/pest in end_location) // And for the other kind of bug...
+		pest.gib()
+
 	start_location.move_contents_to(end_location)
 
 	for(var/turf/T in get_area_turfs(end_location) )
@@ -256,9 +262,10 @@ var/specops_shuttle_timeleft = 0
 		user << "\red Access Denied."
 		return
 
-	if (sent_strike_team == 0 && send_emergency_team == 0)
-		usr << "\red The strike team has not yet deployed."
-		return
+//Commented out so admins can do shenanigans at their leisure. Also makes the force-spawned admin ERTs able to use the shuttle.
+//	if (sent_strike_team == 0 && send_emergency_team == 0)
+//		usr << "\red The strike team has not yet deployed."
+//		return
 
 	if(..())
 		return
