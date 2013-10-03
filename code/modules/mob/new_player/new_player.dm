@@ -74,7 +74,10 @@
 			if(ticker.hide_mode)
 				stat("Game Mode:", "Secret")
 			else
-				stat("Game Mode:", "[master_mode]")
+				if(ticker.hide_mode == 0)
+					stat("Game Mode:", "[master_mode]") // Old setting for showing the game mode
+				else
+					stat("Game Mode: ", "Secret")
 
 			if((ticker.current_state == GAME_STATE_PREGAME) && going)
 				stat("Time To Start:", ticker.pregame_timeleft)
@@ -106,7 +109,7 @@
 
 		if(href_list["observe"])
 
-			if(alert(src,"Are you sure you wish to observe? You will not be able to play this round!","Player Setup","Yes","No") == "Yes")
+			if(alert(src,"Are you sure you wish to observe? You will have to wait 30 minutes before being able to respawn!","Player Setup","Yes","No") == "Yes")
 				if(!client)	return 1
 				var/mob/dead/observer/observer = new()
 
@@ -119,7 +122,7 @@
 				src << "\blue Now teleporting."
 				observer.loc = O.loc
 				if(client.prefs.be_random_name)
-					client.prefs.real_name = random_name()
+					client.prefs.real_name = random_name(client.prefs.gender)
 				observer.real_name = client.prefs.real_name
 				observer.name = observer.real_name
 				observer.key = key
@@ -134,9 +137,7 @@
 
 			if(client.prefs.species != "Human")
 
-				var/S = client.prefs.species
-				if(S == "Unathi") S = "Soghun"
-				if(!is_alien_whitelisted(src, S) && config.usealienwhitelist)
+				if(!is_alien_whitelisted(src, client.prefs.species) && config.usealienwhitelist)
 					src << alert("You are currently not whitelisted to play [client.prefs.species].")
 					return 0
 
@@ -151,9 +152,7 @@
 				usr << "\blue There is an administrative lock on entering the game!"
 				return
 
-			var/S = client.prefs.species
-			if(S == "Unathi") S = "Soghun"
-			if(!is_alien_whitelisted(src, S) && config.usealienwhitelist)
+			if(!is_alien_whitelisted(src, client.prefs.species) && config.usealienwhitelist)
 				src << alert("You are currently not whitelisted to play [client.prefs.species].")
 				return 0
 
@@ -347,40 +346,25 @@
 		var/mob/living/carbon/human/new_character = new(loc)
 		new_character.lastarea = get_area(loc)
 
-		if(client.prefs.species == "Tajaran") //This is like the worst, but it works, so meh. - Erthilo
-			if(is_alien_whitelisted(src, "Tajaran") || !config.usealienwhitelist)
-				new_character.dna.mutantrace = "tajaran"
-				new_character.tajaran_talk_understand = 1
-		if(client.prefs.species == "Unathi")
-			if(is_alien_whitelisted(src, "Soghun") || !config.usealienwhitelist)
-				new_character.dna.mutantrace = "lizard"
-				new_character.soghun_talk_understand = 1
-		if(client.prefs.species == "Skrell")
-			if(is_alien_whitelisted(src, "Skrell") || !config.usealienwhitelist)
-				new_character.dna.mutantrace = "skrell"
-				new_character.skrell_talk_understand = 1
-		if(client.prefs.species == "Kidan")
-			if(is_alien_whitelisted(src, "Kidan") || !config.usealienwhitelist)
-				new_character.dna.mutantrace = "kidan"
-				new_character.kidan_talk_understand = 1
+		var/datum/species/chosen_species
+		if(client.prefs.species)
+			chosen_species = all_species[client.prefs.species]
+		if(chosen_species)
+			if(is_alien_whitelisted(src, client.prefs.species) || !config.usealienwhitelist || !(chosen_species.flags & WHITELISTED) || (client.holder.rights & R_ADMIN) )// Have to recheck admin due to no usr at roundstart. Latejoins are fine though.
+				new_character.set_species(client.prefs.species)
+				if(chosen_species.language)
+					new_character.add_language(chosen_species.language)
 
-		if(client.prefs.language == "Tajaran")
-			if(is_alien_whitelisted(src, "Language_Tajaran") || !config.usealienwhitelist)
-				new_character.tajaran_talk_understand = 1
-		if(client.prefs.language == "Unathi")
-			if(is_alien_whitelisted(src, "Language_Soghun") || !config.usealienwhitelist)
-				new_character.soghun_talk_understand = 1
-		if(client.prefs.language == "Skrell")
-			if(is_alien_whitelisted(src, "Language_Skrell") || !config.usealienwhitelist)
-				new_character.skrell_talk_understand = 1
-		if(client.prefs.language == "Kidan")
-			if(is_alien_whitelisted(src, "Language_Kidan") || !config.usealienwhitelist)
-				new_character.kidan_talk_understand = 1
-
+		var/datum/language/chosen_language
+		if(client.prefs.language)
+			chosen_language = all_languages["[client.prefs.language]"]
+		if(chosen_language)
+			if(is_alien_whitelisted(src, client.prefs.language) || !config.usealienwhitelist || !(chosen_language.flags & WHITELISTED))
+				new_character.add_language("[client.prefs.language]")
 
 		if(ticker.random_players)
 			new_character.gender = pick(MALE, FEMALE)
-			client.prefs.real_name = random_name()
+			client.prefs.real_name = random_name(new_character.gender)
 			client.prefs.randomize_appearance_for(new_character)
 		else
 			client.prefs.copy_to(new_character)
@@ -410,7 +394,7 @@
 	proc/ViewManifest()
 		var/dat = "<html><body>"
 		dat += "<h4>Crew Manifest</h4>"
-		dat += data_core.get_manifest()
+		dat += data_core.get_manifest(OOC = 1)
 
 		src << browse(dat, "window=manifest;size=370x420;can_close=1")
 

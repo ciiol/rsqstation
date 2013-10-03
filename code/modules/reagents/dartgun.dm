@@ -28,7 +28,7 @@
 	var/list/mixing = list() //Containers being used for mixing.
 	var/obj/item/weapon/dart_cartridge/cartridge = null //Container of darts.
 	var/max_beakers = 3
-	var/dart_reagent_amount = 5
+	var/dart_reagent_amount = 15
 	var/container_type = /obj/item/weapon/reagent_containers/glass/beaker/vial
 	var/list/starting_chems = null
 
@@ -52,7 +52,7 @@
 	if(starting_chems)
 		for(var/chem in starting_chems)
 			var/obj/item/weapon/reagent_containers/glass/beaker/vial/B = new(src)
-			B.reagents.add_reagent(chem, 25)
+			B.reagents.add_reagent(chem, 50)
 			beakers += B
 	cartridge = new /obj/item/weapon/dart_cartridge(src)
 	update_icon()
@@ -177,13 +177,13 @@
 							R += A.id + " ("
 							R += num2text(A.volume) + "),"
 					if (istype(M, /mob))
-						M.attack_log += "\[[time_stamp()]\] <b>[user]/[user.ckey]</b> shot <b>[M]/[M.ckey]</b> with a <b>syringegun</b> ([R])"
-						user.attack_log += "\[[time_stamp()]\] <b>[user]/[user.ckey]</b> shot <b>[M]/[M.ckey]</b> with a <b>syringegun</b> ([R])"
-						log_attack("<font color='red'>[user] ([user.ckey]) shot [M] ([M.ckey]) with a syringegun ([R])</font>")
+						M.attack_log += "\[[time_stamp()]\] <b>[user]/[user.ckey]</b> shot <b>[M]/[M.ckey]</b> with a <b>dartgun</b> ([R])"
+						user.attack_log += "\[[time_stamp()]\] <b>[user]/[user.ckey]</b> shot <b>[M]/[M.ckey]</b> with a <b>dartgun</b> ([R])"
+						msg_admin_attack("[user] ([user.ckey]) shot [M] ([M.ckey]) with a dartgun ([R]) (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[user.x];Y=[user.y];Z=[user.z]'>JMP</a>)")
 
 					else
-						M.attack_log += "\[[time_stamp()]\] <b>UNKNOWN SUBJECT (No longer exists)</b> shot <b>[M]/[M.ckey]</b> with a <b>syringegun</b> ([R])"
-						log_attack("<font color='red'>UNKNOWN shot [M] ([M.ckey]) with a <b>syringegun</b> ([R])</font>")
+						M.attack_log += "\[[time_stamp()]\] <b>UNKNOWN SUBJECT (No longer exists)</b> shot <b>[M]/[M.ckey]</b> with a <b>dartgun</b> ([R])"
+						msg_admin_attack("UNKNOWN shot [M] ([M.ckey]) with a <b>dartgun</b> ([R]) (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[user.x];Y=[user.y];Z=[user.z]'>JMP</a>)")
 
 					if(D.reagents)
 						D.reagents.trans_to(M, 15)

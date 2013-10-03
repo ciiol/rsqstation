@@ -113,6 +113,8 @@
 
 	handle_regular_hud_updates()
 
+	pulse = handle_pulse()
+
 	// Grabbing
 	for(var/obj/item/weapon/grab/G in src)
 		G.process()
@@ -200,7 +202,7 @@
 			if(getBrainLoss() >= 50)
 				if(10 <= rn && rn <= 12) if(!lying)
 					src << "\red Your legs won't respond properly, you fall down."
-					lying = 1
+					resting = 1
 
 	proc/handle_stasis_bag()
 		// Handle side effects from stasis bag
@@ -213,6 +215,7 @@
 			adjustCloneLoss(0.1)
 
 	proc/handle_mutations_and_radiation()
+
 		if(getFireLoss())
 			if((COLD_RESISTANCE in mutations) || (prob(1)))
 				heal_organ_damage(0,1)
@@ -238,6 +241,16 @@
 				radiation = 0
 
 			else
+				if(species.flags & RAD_ABSORB)
+					var/rads = radiation/25
+					radiation -= rads
+					nutrition += rads
+					heal_overall_damage(rads,rads)
+					adjustOxyLoss(-(rads))
+					adjustToxLoss(-(rads))
+					updatehealth()
+					return
+
 				var/damage = 0
 				switch(radiation)
 					if(1 to 49)
@@ -276,6 +289,7 @@
 	proc/breathe()
 		if(reagents.has_reagent("lexorin")) return
 		if(istype(loc, /obj/machinery/atmospherics/unary/cryo_cell)) return
+		if(species && species.flags & NO_BREATHE) return
 		if((health > 0) && (mNobreath in mutations)) return // No need to breath
 
 		var/datum/organ/internal/lungs/L = internal_organs["lungs"]
@@ -313,7 +327,6 @@
 					breath_moles = environment.total_moles()*BREATH_PERCENTAGE
 
 					breath = loc.remove_air(breath_moles)
-
 
 					if(!is_lung_ruptured())
 						if(!breath || breath.total_moles < BREATH_MOLES / 5 || breath.total_moles > BREATH_MOLES * 5)
@@ -412,7 +425,7 @@
 		// Nitrogen, for Vox.
 		var/Nitrogen_pp = (breath.nitrogen/breath.total_moles())*breath_pressure
 
-		if(O2_pp < safe_oxygen_min && src.dna.mutantrace!="vox") 	// Too little oxygen
+		if(O2_pp < safe_oxygen_min && species.name != "Vox") 	// Too little oxygen
 			if(prob(20))
 				spawn(0) emote("gasp")
 			if(O2_pp > 0)
@@ -430,7 +443,7 @@
 			oxyloss += 5*ratio
 			oxygen_used = breath.oxygen*ratio/6
 			oxygen_alert = max(oxygen_alert, 1)*/
-		else if(Nitrogen_pp < safe_oxygen_min && src.dna.mutantrace=="vox")  //Vox breathe nitrogen, not oxygen.
+		else if(Nitrogen_pp < safe_oxygen_min && species.name == "Vox")  //Vox breathe nitrogen, not oxygen.
 
 			if(prob(20))
 				spawn(0) emote("gasp")
@@ -475,7 +488,7 @@
 			if(reagents)
 				reagents.add_reagent("plasma", Clamp(ratio, MIN_PLASMA_DAMAGE, MAX_PLASMA_DAMAGE))
 			toxins_alert = max(toxins_alert, 1)
-		else if(O2_pp > vox_oxygen_max && src.dna.mutantrace=="vox") //Oxygen is toxic to vox.
+		else if(O2_pp > vox_oxygen_max && species.name == "Vox") //Oxygen is toxic to vox.
 			var/ratio = (breath.oxygen/vox_oxygen_max) * 1000
 			adjustToxLoss(Clamp(ratio, MIN_PLASMA_DAMAGE, MAX_PLASMA_DAMAGE))
 			toxins_alert = max(toxins_alert, 1)
@@ -488,7 +501,7 @@
 				if(SA_pp > SA_para_min) // Enough to make us paralysed for a bit
 					Paralyse(3) // 3 gives them one second to wake up and run away a bit!
 					if(SA_pp > SA_sleep_min) // Enough to make us sleep as well
-						sleeping = max(sleeping+2, 10)
+						sleeping = min(sleeping+2, 10)
 				else if(SA_pp > 0.15)	// There is sleeping gas in their lungs, but only a little, so give them a bit of a warning
 					if(prob(20))
 						spawn(0) emote(pick("giggle", "laugh"))
@@ -496,30 +509,30 @@
 
 		if( (abs(310.15 - breath.temperature) > 50) && !(COLD_RESISTANCE in mutations)) // Hot air hurts :(
 			if(status_flags & GODMODE)	return 1	//godmode
-			if(breath.temperature < 260.15 && dna.mutantrace != "vox") //Vox are resistant to cold.
+			if(breath.temperature < species.cold_level_1)
 				if(prob(20))
 					src << "\red You feel your face freezing and an icicle forming in your lungs!"
-			else if(breath.temperature > 360.15)
+			else if(breath.temperature > species.heat_level_1)
 				if(prob(20))
 					src << "\red You feel your face burning and a searing heat in your lungs!"
 
 			switch(breath.temperature)
-				if(-INFINITY to 120)
+				if(-INFINITY to species.cold_level_3)
 					apply_damage(COLD_GAS_DAMAGE_LEVEL_3, BURN, "head", used_weapon = "Excessive Cold")
 					fire_alert = max(fire_alert, 1)
-				if(120 to 200 && dna.mutantrace != "vox")  //Vox are resistant to cold.
+				if(species.cold_level_3 to species.cold_level_2)
 					apply_damage(COLD_GAS_DAMAGE_LEVEL_2, BURN, "head", used_weapon = "Excessive Cold")
 					fire_alert = max(fire_alert, 1)
-				if(200 to 260 && dna.mutantrace != "vox")  //Vox are resistant to cold.
+				if(species.cold_level_2 to species.cold_level_1)
 					apply_damage(COLD_GAS_DAMAGE_LEVEL_1, BURN, "head", used_weapon = "Excessive Cold")
 					fire_alert = max(fire_alert, 1)
-				if(360 to 400)
+				if(species.heat_level_1 to species.heat_level_2)
 					apply_damage(HEAT_GAS_DAMAGE_LEVEL_1, BURN, "head", used_weapon = "Excessive Heat")
 					fire_alert = max(fire_alert, 2)
-				if(400 to 1000)
+				if(species.heat_level_2 to species.heat_level_3)
 					apply_damage(HEAT_GAS_DAMAGE_LEVEL_2, BURN, "head", used_weapon = "Excessive Heat")
 					fire_alert = max(fire_alert, 2)
-				if(1000 to INFINITY)
+				if(species.heat_level_3 to INFINITY)
 					apply_damage(HEAT_GAS_DAMAGE_LEVEL_3, BURN, "head", used_weapon = "Excessive Heat")
 					fire_alert = max(fire_alert, 2)
 
@@ -530,35 +543,37 @@
 	proc/handle_environment(datum/gas_mixture/environment)
 		if(!environment)
 			return
-		var/loc_temp = T0C
-		if(istype(loc, /obj/mecha))
-			var/obj/mecha/M = loc
-			loc_temp =  M.return_temperature()
-		else if(istype(get_turf(src), /turf/space))
-			var/turf/heat_turf = get_turf(src)
-			loc_temp = heat_turf.temperature
-		else if(istype(loc, /obj/machinery/atmospherics/unary/cryo_cell))
-			loc_temp = loc:air_contents.temperature
-		else
-			loc_temp = environment.temperature
+		if(!istype(get_turf(src), /turf/space)) //space is not meant to change your body temperature.
+			var/loc_temp = T0C
+			if(istype(loc, /obj/mecha))
+				var/obj/mecha/M = loc
+				loc_temp =  M.return_temperature()
+			else if(istype(get_turf(src), /turf/space))
+			else if(istype(loc, /obj/machinery/atmospherics/unary/cryo_cell))
+				loc_temp = loc:air_contents.temperature
+			else
+				loc_temp = environment.temperature
 
-		//world << "Loc temp: [loc_temp] - Body temp: [bodytemperature] - Fireloss: [getFireLoss()] - Thermal protection: [get_thermal_protection()] - Fire protection: [thermal_protection + add_fire_protection(loc_temp)] - Heat capacity: [environment_heat_capacity] - Location: [loc] - src: [src]"
+			//world << "Loc temp: [loc_temp] - Body temp: [bodytemperature] - Fireloss: [getFireLoss()] - Thermal protection: [get_thermal_protection()] - Fire protection: [thermal_protection + add_fire_protection(loc_temp)] - Heat capacity: [environment_heat_capacity] - Location: [loc] - src: [src]"
 
-		//Body temperature is adjusted in two steps. Firstly your body tries to stabilize itself a bit.
-		if(stat != 2)
-			stabilize_temperature_from_calories()
+			//Body temperature is adjusted in two steps. Firstly your body tries to stabilize itself a bit.
+			if(stat != 2)
+				stabilize_temperature_from_calories()
 
-		//After then, it reacts to the surrounding atmosphere based on your thermal protection
-		if(loc_temp < bodytemperature)
-			//Place is colder than we are
-			var/thermal_protection = get_cold_protection(loc_temp) //This returns a 0 - 1 value, which corresponds to the percentage of protection based on what you're wearing and what you're exposed to.
-			if(thermal_protection < 1)
-				bodytemperature += min((1-thermal_protection) * ((loc_temp - bodytemperature) / BODYTEMP_COLD_DIVISOR), BODYTEMP_COOLING_MAX)
-		else
-			//Place is hotter than we are
-			var/thermal_protection = get_heat_protection(loc_temp) //This returns a 0 - 1 value, which corresponds to the percentage of protection based on what you're wearing and what you're exposed to.
-			if(thermal_protection < 1)
-				bodytemperature += min((1-thermal_protection) * ((loc_temp - bodytemperature) / BODYTEMP_HEAT_DIVISOR), BODYTEMP_HEATING_MAX)
+	//		log_debug("Adjusting to atmosphere.")
+			//After then, it reacts to the surrounding atmosphere based on your thermal protection
+			if(loc_temp < BODYTEMP_COLD_DAMAGE_LIMIT)			//Place is colder than we are
+				var/thermal_protection = get_cold_protection(loc_temp) //This returns a 0 - 1 value, which corresponds to the percentage of protection based on what you're wearing and what you're exposed to.
+				if(thermal_protection < 1)
+					var/amt = min((1-thermal_protection) * ((loc_temp - bodytemperature) / BODYTEMP_COLD_DIVISOR), BODYTEMP_COOLING_MAX)
+	//				log_debug("[loc_temp] is Cold. Cooling by [amt]")
+					bodytemperature += amt
+			else if (loc_temp > BODYTEMP_HEAT_DAMAGE_LIMIT)			//Place is hotter than we are
+				var/thermal_protection = get_heat_protection(loc_temp) //This returns a 0 - 1 value, which corresponds to the percentage of protection based on what you're wearing and what you're exposed to.
+				if(thermal_protection < 1)
+					var/amt = min((1-thermal_protection) * ((loc_temp - bodytemperature) / BODYTEMP_HEAT_DIVISOR), BODYTEMP_HEATING_MAX)
+	//				log_debug("[loc_temp] is Heat. Heating up by [amt]")
+					bodytemperature += amt
 
 		var body_additional_heat_limit = 0
 		var body_additional_cold_limit = 0
@@ -603,22 +618,22 @@
 		var/pressure = environment.return_pressure()
 		var/adjusted_pressure = calculate_affecting_pressure(pressure) //Returns how much pressure actually affects the mob.
 		if(status_flags & GODMODE)	return 1	//godmode
-		switch(adjusted_pressure)
-			if(HAZARD_HIGH_PRESSURE to INFINITY)
-				adjustBruteLoss( min( ( (adjusted_pressure / HAZARD_HIGH_PRESSURE) -1 )*PRESSURE_DAMAGE_COEFFICIENT , MAX_HIGH_PRESSURE_DAMAGE) )
-				pressure_alert = 2
-			if(WARNING_HIGH_PRESSURE to HAZARD_HIGH_PRESSURE)
-				pressure_alert = 1
-			if(WARNING_LOW_PRESSURE to WARNING_HIGH_PRESSURE)
-				pressure_alert = 0
-			if(HAZARD_LOW_PRESSURE to WARNING_LOW_PRESSURE)
-				pressure_alert = -1
-			else
+
+		if(adjusted_pressure >= species.hazard_high_pressure)
+			adjustBruteLoss( min( ( (adjusted_pressure / species.hazard_high_pressure) -1 )*PRESSURE_DAMAGE_COEFFICIENT , MAX_HIGH_PRESSURE_DAMAGE) )
+			pressure_alert = 2
+		else if(adjusted_pressure >= species.warning_high_pressure)
+			pressure_alert = 1
+		else if(adjusted_pressure >= species.warning_low_pressure)
+			pressure_alert = 0
+		else if(adjusted_pressure >= species.hazard_low_pressure)
+			pressure_alert = -1
+		else
 				if( !(mRegen in mutations) && src.dna.mutantrace!="vox")
-					adjustBruteLoss( LOW_PRESSURE_DAMAGE )
-					pressure_alert = -2
-				else
-					pressure_alert = -1
+				adjustBruteLoss( LOW_PRESSURE_DAMAGE )
+				pressure_alert = -2
+			else
+				pressure_alert = -1
 
 		if(environment.toxins > MOLES_PLASMA_VISIBLE)
 			pl_effects()
@@ -644,19 +659,25 @@
 	*/
 
 	proc/stabilize_temperature_from_calories()
+		var/body_temperature_difference = 310.15 - bodytemperature
+		if (abs(body_temperature_difference) < 0.01)
+			return //fuck this precision
 		switch(bodytemperature)
 			if(-INFINITY to 260.15) //260.15 is 310.15 - 50, the temperature where you start to feel effects.
 				if(nutrition >= 2) //If we are very, very cold we'll use up quite a bit of nutriment to heat us up.
 					nutrition -= 2
-				var/body_temperature_difference = 310.15 - bodytemperature
-				bodytemperature += max((body_temperature_difference / BODYTEMP_AUTORECOVERY_DIVISOR), BODYTEMP_AUTORECOVERY_MINIMUM)
+				var/recovery_amt = max((body_temperature_difference / BODYTEMP_AUTORECOVERY_DIVISOR), BODYTEMP_AUTORECOVERY_MINIMUM)
+//				log_debug("Cold. Difference = [body_temperature_difference]. Recovering [recovery_amt]")
+				bodytemperature += recovery_amt
 			if(260.15 to 360.15)
-				var/body_temperature_difference = 310.15 - bodytemperature
-				bodytemperature += body_temperature_difference / BODYTEMP_AUTORECOVERY_DIVISOR
+				var/recovery_amt = body_temperature_difference / BODYTEMP_AUTORECOVERY_DIVISOR
+//				log_debug("Norm. Difference = [body_temperature_difference]. Recovering [recovery_amt]")
+				bodytemperature += recovery_amt
 			if(360.15 to INFINITY) //360.15 is 310.15 + 50, the temperature where you start to feel effects.
 				//We totally need a sweat system cause it totally makes sense...~
-				var/body_temperature_difference = 310.15 - bodytemperature
-				bodytemperature += min((body_temperature_difference / BODYTEMP_AUTORECOVERY_DIVISOR), -BODYTEMP_AUTORECOVERY_MINIMUM)	//We're dealing with negative numbers
+				var/recovery_amt = min((body_temperature_difference / BODYTEMP_AUTORECOVERY_DIVISOR), -BODYTEMP_AUTORECOVERY_MINIMUM)	//We're dealing with negative numbers
+//				log_debug("Hot. Difference = [body_temperature_difference]. Recovering [recovery_amt]")
+				bodytemperature += recovery_amt
 
 	//This proc returns a number made up of the flags for body parts which you are protected on. (such as HEAD, UPPER_TORSO, LOWER_TORSO, etc. See setup.dm for the full list)
 	proc/get_heat_protection_flags(temperature) //Temperature is the temperature you're being exposed to.
@@ -842,8 +863,7 @@
 		if(status_flags & GODMODE)	return 0	//godmode
 		adjustToxLoss(total_plasmaloss)
 
-//		if(dna && dna.mutantrace == "plant") //couldn't think of a better place to place it, since it handles nutrition -- Urist
-		if(PLANT in mutations)
+		if(species.flags & REQUIRE_LIGHT)
 			var/light_amount = 0 //how much light there is in the place, affects receiving nutrition and healing
 			if(isturf(loc)) //else, there's considered to be no light
 				var/turf/T = loc
@@ -852,6 +872,8 @@
 					if(A.lighting_use_dynamic)	light_amount = min(10,T.lighting_lumcount) - 5 //hardcapped so it's not abused by having a ton of flashlights
 					else						light_amount =  5
 			nutrition += light_amount
+			traumatic_shock -= light_amount
+
 			if(nutrition > 500)
 				nutrition = 500
 			if(light_amount > 2) //if there's enough light, heal
@@ -901,10 +923,10 @@
 			if(overeatduration > 1)
 				overeatduration -= 2 //doubled the unfat rate
 
-//		if(dna && dna.mutantrace == "plant")
-		if(PLANT in mutations)
+		if(species.flags & REQUIRE_LIGHT)
 			if(nutrition < 200)
 				take_overall_damage(2,0)
+				traumatic_shock++
 
 		if (drowsyness)
 			drowsyness--
@@ -999,7 +1021,7 @@
 						sleeping = max(sleeping-1, 0)
 				blinded = 1
 				stat = UNCONSCIOUS
-				if( prob(10) && health && !hal_crit )
+				if( prob(2) && health && !hal_crit )
 					spawn(0)
 						emote("snore")
 			else if(resting)
@@ -1149,14 +1171,12 @@
 			sight &= ~(SEE_TURFS|SEE_MOBS|SEE_OBJS)
 			if(dna)
 				switch(dna.mutantrace)
-					if("lizard","slime")
+					if("slime")
 						see_in_dark = 3
 						see_invisible = SEE_INVISIBLE_LEVEL_ONE
-					if("shadow","tajaran")
+					if("shadow")
 						see_in_dark = 8
 						see_invisible = SEE_INVISIBLE_LEVEL_ONE
-					else
-						see_in_dark = 2
 
 			if(XRAY in mutations)
 				sight |= SEE_TURFS|SEE_MOBS|SEE_OBJS
@@ -1231,18 +1251,22 @@
 				see_invisible = SEE_INVISIBLE_LIVING
 
 			if(healths)
-				switch(hal_screwyhud)
-					if(1)	healths.icon_state = "health6"
-					if(2)	healths.icon_state = "health7"
-					else
-						switch(health - halloss)
-							if(100 to INFINITY)		healths.icon_state = "health0"
-							if(80 to 100)			healths.icon_state = "health1"
-							if(60 to 80)			healths.icon_state = "health2"
-							if(40 to 60)			healths.icon_state = "health3"
-							if(20 to 40)			healths.icon_state = "health4"
-							if(0 to 20)				healths.icon_state = "health5"
-							else					healths.icon_state = "health6"
+				if (analgesic)
+					healths.icon_state = "health_health_numb"
+				else
+					switch(hal_screwyhud)
+						if(1)	healths.icon_state = "health6"
+						if(2)	healths.icon_state = "health7"
+						else
+							//switch(health - halloss)
+							switch(100 - traumatic_shock)
+								if(100 to INFINITY)		healths.icon_state = "health0"
+								if(80 to 100)			healths.icon_state = "health1"
+								if(60 to 80)			healths.icon_state = "health2"
+								if(40 to 60)			healths.icon_state = "health3"
+								if(20 to 40)			healths.icon_state = "health4"
+								if(0 to 20)				healths.icon_state = "health5"
+								else					healths.icon_state = "health6"
 
 			if(nutrition_icon)
 				switch(nutrition)
@@ -1344,28 +1368,35 @@
 		if(bodytemperature > 406)
 			for(var/datum/disease/D in viruses)
 				D.cure()
-			if(virus2)	virus2.cure(src)
-		if(!virus2)
-			for(var/obj/effect/decal/cleanable/blood/B in view(1,src))
-				if(B.virus2 && get_infection_chance())
-					infect_virus2(src,B.virus2)
-			for(var/obj/effect/decal/cleanable/mucus/M in view(1,src))
-				if(M.virus2 && get_infection_chance())
-					infect_virus2(src,M.virus2)
-		else
-			if(isnull(virus2)) // Trying to figure out a runtime error that keeps repeating
+			for (var/ID in virus2)
+				var/datum/disease2/disease/V = virus2[ID]
+				V.cure(src)
+
+		for(var/obj/effect/decal/cleanable/blood/B in view(1,src))
+			if(B.virus2.len && get_infection_chance(src))
+				for (var/ID in B.virus2)
+					var/datum/disease2/disease/V = virus2[ID]
+					infect_virus2(src,V)
+		for(var/obj/effect/decal/cleanable/mucus/M in view(1,src))
+			if(M.virus2.len && get_infection_chance(src))
+				for (var/ID in M.virus2)
+					var/datum/disease2/disease/V = virus2[ID]
+					infect_virus2(src,V)
+
+		for (var/ID in virus2)
+			var/datum/disease2/disease/V = virus2[ID]
+			if(isnull(V)) // Trying to figure out a runtime error that keeps repeating
 				CRASH("virus2 nulled before calling activate()")
 			else
-				virus2.activate(src)
-
+				V.activate(src)
 			// activate may have deleted the virus
-			if(!virus2) return
+			if(!V) continue
 
 			// check if we're immune
-			if(virus2.antigen & src.antibodies) virus2.dead = 1
+			if(V.antigen & src.antibodies)
+				V.dead = 1
 
-
-			return
+		return
 
 	proc/handle_stomach()
 		spawn(0)
@@ -1425,6 +1456,35 @@
 
 		if (shock_stage > 80)
 			Paralyse(rand(15,28))
+
+	proc/handle_pulse()
+		if(life_tick % 5) return pulse	//update pulse every 5 life ticks (~1 tick/sec, depending on server load)
+
+		if(stat == DEAD)
+			return PULSE_NONE	//that's it, you're dead, nothing can influence your pulse
+
+		var/temp = PULSE_NORM
+
+		if(round(vessel.get_reagent_amount("blood")) <= BLOOD_VOLUME_BAD)	//how much blood do we have
+			temp = PULSE_THREADY	//not enough :(
+
+		if(status_flags & FAKEDEATH)
+			temp = PULSE_NONE		//pretend that we're dead. unlike actual death, can be inflienced by meds
+
+		for(var/datum/reagent/R in reagents.reagent_list)
+			if(R.id in bradycardics)
+				if(temp <= PULSE_THREADY && temp >= PULSE_NORM)
+					temp--
+					break		//one reagent is enough
+								//comment out the breaks to make med effects stack
+		for(var/datum/reagent/R in reagents.reagent_list)				//handles different chems' influence on pulse
+			if(R.id in tachycardics)
+				if(temp <= PULSE_FAST && temp >= PULSE_NONE)
+					temp++
+					break
+
+		return temp
+
 
 #undef HUMAN_MAX_OXYLOSS
 #undef HUMAN_CRIT_MAX_OXYLOSS

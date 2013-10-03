@@ -45,8 +45,13 @@
 		poweralm = state
 		if(istype(source))	//Only report power alarms on the z-level where the source is located.
 			var/list/cameras = list()
-			for (var/obj/machinery/camera/C in src)
-				cameras += C
+			for (var/area/RA in related)
+				for (var/obj/machinery/camera/C in RA)
+					cameras += C
+					if(state == 1)
+						C.network.Remove("Power Alarms")
+					else
+						C.network.Add("Power Alarms")
 			for (var/mob/living/silicon/aiPlayer in player_list)
 				if(aiPlayer.z == source.z)
 					if (state == 1)
@@ -97,11 +102,15 @@
 				//updateicon()
 				for(var/obj/machinery/camera/C in RA)
 					cameras += C
+					C.network.Add("Atmosphere Alarms")
 			for(var/mob/living/silicon/aiPlayer in player_list)
 				aiPlayer.triggerAlarm("Atmosphere", src, cameras, src)
 			for(var/obj/machinery/computer/station_alert/a in machines)
 				a.triggerAlarm("Atmosphere", src, cameras, src)
 		else if (atmosalm == 2)
+			for(var/area/RA in related)
+				for(var/obj/machinery/camera/C in RA)
+					C.network.Remove("Atmosphere Alarms")
 			for(var/mob/living/silicon/aiPlayer in player_list)
 				aiPlayer.cancelAlarm("Atmosphere", src, src)
 			for(var/obj/machinery/computer/station_alert/a in machines)
@@ -120,8 +129,10 @@
 		mouse_opacity = 0
 		autoblock()
 		var/list/cameras = list()
-		for (var/obj/machinery/camera/C in src)
-			cameras += C
+		for(var/area/RA in related)
+			for (var/obj/machinery/camera/C in RA)
+				cameras.Add(C)
+				C.network.Add("Fire Alarms")
 		for (var/mob/living/silicon/ai/aiPlayer in player_list)
 			aiPlayer.triggerAlarm("Fire", src, cameras, src)
 		for (var/obj/machinery/computer/station_alert/a in machines)
@@ -133,6 +144,9 @@
 		mouse_opacity = 0
 		updateicon()
 		autoblock()
+		for(var/area/RA in related)
+			for (var/obj/machinery/camera/C in RA)
+				C.network.Remove("Fire Alarms")
 		for (var/mob/living/silicon/ai/aiPlayer in player_list)
 			aiPlayer.cancelAlarm("Fire", src, src)
 		for (var/obj/machinery/computer/station_alert/a in machines)

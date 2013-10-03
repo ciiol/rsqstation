@@ -51,7 +51,7 @@
 	//This list tracks characters spawned in the world and cannot be modified in-game. Currently referenced by respawn_character().
 	var/locked[] = list()
 
-	proc/get_manifest(monochrome)
+	proc/get_manifest(monochrome, OOC)
 		var/list/heads = new()
 		var/list/sec = new()
 		var/list/eng = new()
@@ -80,7 +80,15 @@
 			var/name = t.fields["name"]
 			var/rank = t.fields["rank"]
 			var/real_rank = t.fields["real_rank"]
-			isactive[name] = t.fields["p_stat"]
+			if(OOC)
+				var/active = 0
+				for(var/mob/M in player_list)
+					if(M.real_name == name && M.client && M.client.inactivity <= 10 * 60 * 10)
+						active = 1
+						break
+				isactive[name] = active ? "Active" : "Inactive"
+			else
+				isactive[name] = t.fields["p_stat"]
 
 			//world << "[name]: [rank]"
 
@@ -189,35 +197,35 @@
 	var/d1 = 0
 	var/d2 = 1
 	layer = 2.44 //Just below unary stuff, which is at 2.45 and above pipes, which are at 2.4
-	var/color = "red"
+	var/cable_color = "red"
 	var/obj/structure/powerswitch/power_switch
 
 /obj/structure/cable/yellow
-	color = "yellow"
+	cable_color = "yellow"
 	icon = 'icons/obj/power_cond_yellow.dmi'
 
 /obj/structure/cable/green
-	color = "green"
+	cable_color = "green"
 	icon = 'icons/obj/power_cond_green.dmi'
 
 /obj/structure/cable/blue
-	color = "blue"
+	cable_color = "blue"
 	icon = 'icons/obj/power_cond_blue.dmi'
 
 /obj/structure/cable/pink
-	color = "pink"
+	cable_color = "pink"
 	icon = 'icons/obj/power_cond_pink.dmi'
 
 /obj/structure/cable/orange
-	color = "orange"
+	cable_color = "orange"
 	icon = 'icons/obj/power_cond_orange.dmi'
 
 /obj/structure/cable/cyan
-	color = "cyan"
+	cable_color = "cyan"
 	icon = 'icons/obj/power_cond_cyan.dmi'
 
 /obj/structure/cable/white
-	color = "white"
+	cable_color = "white"
 	icon = 'icons/obj/power_cond_white.dmi'
 
 /obj/effect/projection

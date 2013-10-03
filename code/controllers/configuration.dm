@@ -27,6 +27,8 @@
 	var/allow_admin_rev = 1				// allows admin revives
 	var/vote_delay = 6000				// minimum time between voting sessions (deciseconds, 10 minute default)
 	var/vote_period = 600				// length of voting period (deciseconds, default 1 minute)
+	var/vote_autotransfer_initial = 108000 // Length of time before the first autotransfer vote is called
+	var/vote_autotransfer_interval = 3600 // length of time before next sequential autotransfer vote
 	var/vote_no_default = 0				// vote does not default to nochange/norestart (tbi)
 	var/vote_no_dead = 0				// dead people can't vote (tbi)
 //	var/enable_authentication = 0		// goon authentication
@@ -118,7 +120,10 @@
 	var/gateway_delay = 18000 //How long the gateway takes before it activates. Default is half an hour.
 	var/ghost_interaction = 0
 
+	var/comms_password = ""
+
 	var/use_irc_bot = 0
+	var/irc_bot_host = ""
 	var/main_irc = ""
 	var/admin_irc = ""
 	var/python_path = "" //Path to the python executable.  Defaults to "python" on windows and "/usr/bin/env python2" on unix
@@ -261,6 +266,12 @@
 
 				if ("vote_period")
 					config.vote_period = text2num(value)
+
+				if ("vote_autotransfer_initial")
+					config.vote_autotransfer_initial = text2num(value)
+
+				if ("vote_autotransfer_interval")
+					config.vote_autotransfer_interval = text2num(value)
 
 				if ("allow_ai")
 					config.allow_ai = 1
@@ -406,6 +417,12 @@
 
 				if("ghost_interaction")
 					config.ghost_interaction = 1
+
+				if("comms_password")
+					config.comms_password = value
+
+				if("irc_bot_host")
+					config.irc_bot_host = value
 
 				if("main_irc")
 					config.main_irc = value

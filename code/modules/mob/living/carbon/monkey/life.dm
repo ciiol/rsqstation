@@ -117,6 +117,17 @@
 			emote("collapse")
 
 		if (radiation)
+
+			if(istype(src,/mob/living/carbon/monkey/diona)) //Filthy check. Dionaea don't take rad damage.
+				var/rads = radiation/25
+				radiation -= rads
+				nutrition += rads
+				heal_overall_damage(rads,rads)
+				adjustOxyLoss(-(rads))
+				adjustToxLoss(-(rads))
+				updatehealth()
+				return
+
 			if (radiation > 100)
 				radiation = 100
 				Weaken(10)
@@ -150,28 +161,40 @@
 						emote("gasp")
 					updatehealth()
 
-	proc/handle_virus_updates()//copypaste from mob/carbon/human/life.dm
+	proc/handle_virus_updates()
+		if(status_flags & GODMODE)	return 0	//godmode
 		if(bodytemperature > 406)
 			for(var/datum/disease/D in viruses)
 				D.cure()
-		if(!virus2)
-			for(var/obj/effect/decal/cleanable/blood/B in view(1,src))
-				if(B.virus2 && get_infection_chance())
-					infect_virus2(src,B.virus2)
-			for(var/obj/effect/decal/cleanable/mucus/M in view(1,src))
-				if(M.virus2 && get_infection_chance())
-					infect_virus2(src,M.virus2)
-		else
-			if(isnull(virus2)) // Trying to figure out a runtime error that keeps repeating
+			for (var/ID in virus2)
+				var/datum/disease2/disease/V = virus2[ID]
+				V.cure(src)
+
+		for(var/obj/effect/decal/cleanable/blood/B in view(1,src))
+			if(B.virus2.len && get_infection_chance(src))
+				for (var/ID in B.virus2)
+					var/datum/disease2/disease/V = virus2[ID]
+					infect_virus2(src,V)
+		for(var/obj/effect/decal/cleanable/mucus/M in view(1,src))
+			if(M.virus2.len && get_infection_chance(src))
+				for (var/ID in M.virus2)
+					var/datum/disease2/disease/V = virus2[ID]
+					infect_virus2(src,V)
+
+		for (var/ID in virus2)
+			var/datum/disease2/disease/V = virus2[ID]
+			if(isnull(V)) // Trying to figure out a runtime error that keeps repeating
 				CRASH("virus2 nulled before calling activate()")
 			else
-				virus2.activate(src)
-
+				V.activate(src)
 			// activate may have deleted the virus
-			if(!virus2) return
+			if(!V) continue
 
 			// check if we're immune
-			if(virus2.antigen & src.antibodies) virus2.dead = 1
+			if(V.antigen & src.antibodies)
+				V.dead = 1
+
+		return
 
 	proc/breathe()
 		if(reagents)
@@ -405,6 +428,25 @@
 			adjustFireLoss(5.0*discomfort)
 
 	proc/handle_chemicals_in_body()
+
+		if(istype(src,/mob/living/carbon/monkey/diona)) //Filthy check. Dionaea nymphs need light or they get sad.
+			var/light_amount = 0 //how much light there is in the place, affects receiving nutrition and healing
+			if(isturf(loc)) //else, there's considered to be no light
+				var/turf/T = loc
+				var/area/A = T.loc
+				if(A)
+					if(A.lighting_use_dynamic)	light_amount = min(10,T.lighting_lumcount) - 5 //hardcapped so it's not abused by having a ton of flashlights
+					else						light_amount =  5
+
+			nutrition += light_amount
+			traumatic_shock -= light_amount
+
+			if(nutrition > 500)
+				nutrition = 500
+			if(light_amount > 2) //if there's enough light, heal
+				heal_overall_damage(1,1)
+				adjustToxLoss(-1)
+				adjustOxyLoss(-1)
 
 		if(reagents) reagents.metabolize(src)
 

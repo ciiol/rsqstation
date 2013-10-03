@@ -4,7 +4,7 @@
 
 /datum/game_mode/traitor/autotraitor
 	name = "AutoTraitor"
-	config_tag = "Extend-A-Traitormongous"
+	config_tag = "extend-a-traitormongous"
 
 	var/list/possible_traitors
 	var/num_players = 0
@@ -124,7 +124,12 @@
 				//message_admins("[newtraitor.real_name] is the new Traitor.")
 
 				forge_traitor_objectives(newtraitor.mind)
-				equip_traitor(newtraitor)
+
+				if(istype(newtraitor, /mob/living/silicon))
+					add_law_zero(newtraitor)
+				else
+					equip_traitor(newtraitor)
+
 				traitors += newtraitor.mind
 				newtraitor << "\red <B>ATTENTION:</B> \black It is time to pay your debt to the Syndicate..."
 				newtraitor << "<B>You are now a traitor.</B>"

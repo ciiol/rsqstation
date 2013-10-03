@@ -133,7 +133,7 @@ var/list/ai_list = list()
 
 		for(var/line in lines)
 		// split & clean up
-			var/list/Entry = text2list(line, "-")
+			var/list/Entry = text2list(line, ":")
 			for(var/i = 1 to Entry.len)
 				Entry[i] = trim(Entry[i])
 
@@ -340,7 +340,7 @@ var/list/ai_list = list()
 	if(href_list["say_word"])
 		src.announcement(href_list["say_word"])
 		return
-	
+
 	if (href_list["lawi"]) // Toggling whether or not a law gets stated by the State Laws verb --NeoFite
 		var/L = text2num(href_list["lawi"])
 		switch(ioncheck[L])
@@ -561,10 +561,9 @@ var/list/ai_list = list()
 		if(!C.can_use())
 			continue
 
-		var/list/tempnetwork = C.network
-		tempnetwork.Remove("CREED", "thunder", "RD", "toxins", "Prison")
+		var/list/tempnetwork = difflist(C.network,RESTRICTED_CAMERA_NETWORKS,1)
 		if(tempnetwork.len)
-			for(var/i in C.network)
+			for(var/i in tempnetwork)
 				cameralist[i] = i
 	var/old_network = network
 	network = input(U, "Which network would you like to view?") as null|anything in cameralist
@@ -653,7 +652,7 @@ var/list/ai_list = list()
 					holo_icon = getHologramIcon(icon('icons/mob/AI.dmi',"holo2"))
 	return
 
-/mob/living/silicon/ai/proc/corereturn()
+/*/mob/living/silicon/ai/proc/corereturn()
 	set category = "Malfunction"
 	set name = "Return to Main Core"
 
@@ -661,7 +660,7 @@ var/list/ai_list = list()
 	if(!istype(apc))
 		src << "\blue You are already in your Main Core."
 		return
-	apc.malfvacate()
+	apc.malfvacate()*/
 
 //Toggles the luminosity and applies it by re-entereing the camera.
 /mob/living/silicon/ai/proc/toggle_camera_light()

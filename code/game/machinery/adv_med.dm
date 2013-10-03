@@ -5,7 +5,7 @@
 	var/mob/living/carbon/occupant
 	var/locked
 	name = "Body Scanner"
-	icon = 'Cryogenic2.dmi'
+	icon = 'icons/obj/Cryogenic2.dmi'
 	icon_state = "body_scanner_0"
 	density = 1
 	anchored = 1
@@ -167,7 +167,7 @@
 	var/delete
 	var/temphtml
 	name = "Body Scanner Console"
-	icon = 'Cryogenic2.dmi'
+	icon = 'icons/obj/Cryogenic2.dmi'
 	icon_state = "body_scannerconsole"
 	density = 1
 	anchored = 1
@@ -235,7 +235,7 @@
 				else
 					dat += text("[]\tHealth %: [] ([])</FONT><BR>", (occupant.health > 50 ? "<font color='blue'>" : "<font color='red'>"), occupant.health, t1)
 
-					if(occupant.virus2)
+					if(occupant.virus2.len)
 						dat += text("<font color='red'>Viral pathogen detected in blood stream.</font><BR>")
 
 					dat += text("[]\t-Brute Damage %: []</FONT><BR>", (occupant.getBruteLoss() < 60 ? "<font color='blue'>" : "<font color='red'>"), occupant.getBruteLoss())

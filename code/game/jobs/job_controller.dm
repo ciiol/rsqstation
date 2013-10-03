@@ -369,7 +369,7 @@ var/global/datum/controller/occupations/job_master
 
 		//give them an account in the station database
 		if(centcomm_account_db)
-			var/datum/money_account/M = centcomm_account_db.add_account_across_all(H.real_name, starting_funds = rand(50,500)*10, pre_existing = 1)
+			var/datum/money_account/M = create_account(H.real_name, rand(50,500)*10, null)
 			if(H.mind)
 				var/remembered_info = ""
 				remembered_info += "<b>Your account number is:</b> #[M.account_number]<br>"
@@ -414,15 +414,15 @@ var/global/datum/controller/occupations/job_master
 							H.equip_to_slot_or_del(new /obj/item/weapon/storage/box/survival(H), slot_r_hand)
 						if(2)
 							var/obj/item/weapon/storage/backpack/BPK = new/obj/item/weapon/storage/backpack(H)
-							new /obj/item/weapon/storage/box(BPK)
+							new /obj/item/weapon/storage/box/survival(BPK)
 							H.equip_to_slot_or_del(BPK, slot_back,1)
 						if(3)
 							var/obj/item/weapon/storage/backpack/BPK = new/obj/item/weapon/storage/backpack/satchel_norm(H)
-							new /obj/item/weapon/storage/box(BPK)
+							new /obj/item/weapon/storage/box/survival(BPK)
 							H.equip_to_slot_or_del(BPK, slot_back,1)
 						if(4)
 							var/obj/item/weapon/storage/backpack/BPK = new/obj/item/weapon/storage/backpack/satchel(H)
-							new /obj/item/weapon/storage/box(BPK)
+							new /obj/item/weapon/storage/box/survival(BPK)
 							H.equip_to_slot_or_del(BPK, slot_back,1)
 
 		H << "<B>You are the [alt_title ? alt_title : rank].</B>"

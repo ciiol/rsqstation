@@ -5,15 +5,46 @@
 	icon = 'icons/mob/human.dmi'
 	icon_state = "body_m_s"
 	var/list/hud_list = list()
-
+	var/datum/species/species //Contains icon generation and language information, set during New().
 
 /mob/living/carbon/human/dummy
 	real_name = "Test Dummy"
 	status_flags = GODMODE|CANPUSH
 
+/mob/living/carbon/human/skrell/New()
+	h_style = "Skrell Male Tentacles"
+	set_species("Skrell")
+	..()
 
+/mob/living/carbon/human/tajaran/New()
+	h_style = "Tajaran Ears"
+	set_species("Tajaran")
+	..()
+
+/mob/living/carbon/human/unathi/New()
+	h_style = "Unathi Horns"
+	set_species("Unathi")
+	..()
+
+/mob/living/carbon/human/vox/New()
+	h_style = "Short Vox Quills"
+	set_species("Vox")
+	..()
+
+/mob/living/carbon/human/diona/New()
+	species = new /datum/species/diona(src)
+	..()
 
 /mob/living/carbon/human/New()
+
+	if(!species)
+		set_species()
+
+	if(species.language)
+		var/datum/language/L = all_languages[species.language]
+		if(L)
+			languages += L
+
 	var/datum/reagents/R = new/datum/reagents(1000)
 	reagents = R
 	R.my_atom = src
@@ -379,6 +410,7 @@
 	<BR>[(handcuffed ? text("<A href='?src=\ref[src];item=handcuff'>Handcuffed</A>") : text("<A href='?src=\ref[src];item=handcuff'>Not Handcuffed</A>"))]
 	<BR>[(legcuffed ? text("<A href='?src=\ref[src];item=legcuff'>Legcuffed</A>") : text(""))]
 	<BR>[(internal ? text("<A href='?src=\ref[src];item=internal'>Remove Internal</A>") : "")]
+	<BR><A href='?src=\ref[src];item=splints'>Remove Splints</A>
 	<BR><A href='?src=\ref[src];item=pockets'>Empty Pockets</A>
 	<BR><A href='?src=\ref[user];refresh=1'>Refresh</A>
 	<BR><A href='?src=\ref[user];mach_close=mob[name]'>Close</A>
@@ -644,7 +676,7 @@
 					for (var/datum/data/record/R in data_core.general)
 						if (R.fields["id"] == E.fields["id"])
 
-							var/setmedical = input(usr, "Specify a new medical status for this person.", "Medical HUD", R.fields["p_stat"]) in list("*Deceased*", "*Unconscious*", "Physically Unfit", "Active", "Cancel")
+							var/setmedical = input(usr, "Specify a new medical status for this person.", "Medical HUD", R.fields["p_stat"]) in list("*SSD*", "*Deceased*", "Physically Unfit", "Active", "Disabled", "Cancel")
 
 							if(hasHUD(usr,"medical"))
 								if(setmedical != "Cancel")
@@ -794,50 +826,14 @@
 	return
 
 /mob/living/carbon/human/get_species()
-	if(dna)
-		switch(dna.mutantrace)
-			if("lizard")
-				return "Unathi"
-			if("tajaran")
-				return "Tajaran"
-			if("skrell")
-				return "Skrell"
-			if("vox")
-				return "Vox"
-			if("plant")
-				return "Mobile vegetation"
-			if("golem")
-				return "Animated Construct"
-			if("kidan")
-				return "Kidan"
-			else
-				return "Human"
 
-/mob/living/carbon/get_species()
-	if(src.dna)
-		if(src.dna.mutantrace == "lizard")
-			return "Unathi"
-		else if(src.dna.mutantrace == "skrell")
-			return "Skrell"
-		else if(src.dna.mutantrace == "tajaran")
-			return "Tajaran"
-		else if(src.dna.mutantrace == "vox")
-			return "Vox"
-		else if(src.dna.mutantrace == "kidan")
-			return "Kidan"
+	if(!species)
+		set_species()
 
-/mob/living/carbon/proc/update_mutantrace_languages()
-	if(src.dna)
-		if(src.dna.mutantrace == "lizard")
-			src.soghun_talk_understand = 1
-		else if(src.dna.mutantrace == "skrell")
-			src.skrell_talk_understand = 1
-		else if(src.dna.mutantrace == "tajaran")
-			src.tajaran_talk_understand = 1
-		else if(src.dna.mutantrace == "vox")
-			src.vox_talk_understand = 1
-		else if(src.dna.mutantrace == "kidan")
-			src.kidan_talk_understand = 1
+	if(dna && dna.mutantrace == "golem")
+		return "Animated Construct"
+
+	return species.name
 
 /mob/living/carbon/human/proc/play_xylophone()
 	if(!src.xylophone)
@@ -1098,6 +1094,7 @@
 		if (!O.amputated)
 			O.status &= ~ORGAN_DESTROYED
 		O.wounds.Cut()
+		O.heal_damage(1000,1000,1,1)
 
 	var/datum/organ/external/head/h = organs_by_name["head"]
 	h.disfigured = 0
@@ -1117,6 +1114,10 @@
 
 	for (var/datum/disease/virus in viruses)
 		virus.cure()
+	for (var/ID in virus2)
+		var/datum/disease2/disease/V = virus2[ID]
+		V.cure(src)
+
 	..()
 
 /mob/living/carbon/human/proc/is_lung_ruptured()
@@ -1267,6 +1268,8 @@ mob/living/carbon/human/yank_out_object()
 /mob/living/carbon/human/proc/handle_embedded_objects()
 
 	for(var/datum/organ/external/organ in src.organs)
+		if(organ.status & ORGAN_SPLINTED) //Splints prevent movement.
+			continue
 		for(var/obj/item/weapon/O in organ.implants)
 			if(!istype(O,/obj/item/weapon/implant) && prob(5)) //Moving with things stuck in you could be bad.
 				// All kinds of embedded objects cause bleeding.
@@ -1280,6 +1283,63 @@ mob/living/carbon/human/yank_out_object()
 						msg ="<span class='warning'>[O] in your [organ.display_name] twists painfully as you move.</span>"
 				src << msg
 
-				organ.status |= ORGAN_BLEEDING
 				organ.take_damage(rand(1,3), 0, 0)
-				src.adjustToxLoss(rand(1,3))
+				if(!(organ.status & ORGAN_ROBOT)) //There is no blood in protheses.
+					organ.status |= ORGAN_BLEEDING
+					src.adjustToxLoss(rand(1,3))
+
+/mob/living/carbon/human/verb/check_pulse()
+	set category = "Object"
+	set name = "Check pulse"
+	set desc = "Approximately count somebody's pulse. Requires you to stand still at least 6 seconds."
+	set src in view(1)
+	var/self = 0
+
+	if(usr.stat == 1 || usr.restrained() || !isliving(usr)) return
+
+	if(usr == src)
+		self = 1
+	if(!self)
+		usr.visible_message("\blue [usr] kneels down, puts \his hand on [src]'s wrist and begins counting their pulse.",\
+		"You begin counting [src]'s pulse")
+	else
+		usr.visible_message("\blue [usr] begins counting their pulse.",\
+		"You begin counting your pulse.")
+
+	if(src.pulse)
+		usr << "\blue [self ? "You have a" : "[src] has a"] pulse! Counting..."
+	else
+		usr << "\red [src] has no pulse!"	//it is REALLY UNLIKELY that a dead person would check his own pulse
+		return
+
+	usr << "Don't move until counting is finished."
+	var/time = world.timeofday
+	sleep(60)
+	if(usr.l_move_time >= time)	//checks if our mob has moved during the sleep()
+		usr << "You moved while counting. Try again."
+	else
+		usr << "\blue [self ? "Your" : "[src]'s"] pulse is [src.get_pulse(GETPULSE_HAND)]."
+
+/mob/living/carbon/human/proc/set_species(var/new_species)
+
+	if(!new_species)
+		new_species = "Human"
+
+	if(species && (species.name && species.name == new_species))
+		return
+
+	species = all_species[new_species]
+
+	see_in_dark = species.darksight
+	if(see_in_dark > 2)
+		see_invisible = SEE_INVISIBLE_LEVEL_ONE
+	else
+		see_invisible = SEE_INVISIBLE_LIVING
+
+	spawn(0)
+		update_icons()
+
+	if(species)
+		return 1
+	else
+		return 0

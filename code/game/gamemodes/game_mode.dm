@@ -17,7 +17,7 @@
 	var/config_tag = null
 	var/intercept_hacked = 0
 	var/votable = 1
-	var/probability = 1
+	var/probability = 0
 	var/station_was_nuked = 0 //see nuclearbomb.dm and malfunction.dm
 	var/explosion_in_progress = 0 //sit back and relax
 	var/list/datum/mind/modePlayer = new
@@ -213,6 +213,8 @@ Implants;
 	for(var/mob/living/carbon/human/man in player_list) if(man.client && man.mind)
 		// NT relation option
 		var/special_role = man.mind.special_role
+		if (special_role == "Wizard" || special_role == "Ninja" || special_role == "Syndicate")
+			continue	//NT intelligence ruled out possiblity that those are too classy to pretend to be a crew.
 		if(man.client.prefs.nanotrasen_relation == "Opposed" && prob(50) || \
 		   man.client.prefs.nanotrasen_relation == "Skeptical" && prob(20))
 			suspects += man
@@ -251,7 +253,7 @@ Implants;
 
 			comm.messagetitle.Add("Cent. Com. Status Summary")
 			comm.messagetext.Add(intercepttext)
-	world << sound('commandreport.ogg')
+	world << sound('sound/AI/commandreport.ogg')
 
 /*	command_alert("Summary downloaded and printed out at all communications consoles.", "Enemy communication intercept. Security Level Elevated.")
 	for(var/mob/M in player_list)
@@ -276,6 +278,7 @@ Implants;
 		if(BE_REV)			roletext="revolutionary"
 		if(BE_CULTIST)		roletext="cultist"
 		if(BE_NINJA)		roletext="ninja"
+		if(BE_RAIDER)		roletext="raider"
 
 	// Assemble a list of active players without jobbans.
 	for(var/mob/new_player/player in player_list)

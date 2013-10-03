@@ -1,8 +1,13 @@
+#ignore misc BYOND files
 *.log
 *.int
 *.rsc
 *.dmb
 *.lk
-info.json
+
 statistics/
 config.local/
+
+#ignore any files in config/, except those in subdirectories.
+/config/*
+!/config/*/*

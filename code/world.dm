@@ -84,6 +84,8 @@
 
 	sleep_offline = 1
 
+	send2mainirc("Server starting up on [config.server? "byond://[config.server]" : "byond://[world.address]:[world.port]"]")
+
 	master_controller = new /datum/controller/game_controller()
 	spawn(1)
 		master_controller.setup()
@@ -316,6 +318,7 @@ proc/setup_database_connection()
 		failed_db_connections = 0	//If this connection succeeded, reset the failed connections counter.
 	else
 		failed_db_connections++		//If it failed, increase the failed connections counter.
+		world.log << dbcon.ErrorMsg()
 
 	return .
 
@@ -353,6 +356,7 @@ proc/setup_old_database_connection()
 		failed_old_db_connections = 0	//If this connection succeeded, reset the failed connections counter.
 	else
 		failed_old_db_connections++		//If it failed, increase the failed connections counter.
+		world.log << dbcon.ErrorMsg()
 
 	return .
 

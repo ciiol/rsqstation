@@ -6,8 +6,8 @@ var/list/admin_verbs_default = list(
 	/client/proc/hide_verbs,			/*hides all our adminverbs*/
 	/client/proc/hide_most_verbs,		/*hides all our hideable adminverbs*/
 	/client/proc/debug_variables,		/*allows us to -see- the variables of any instance in the game. +VAREDIT needed to modify*/
-	/client/proc/check_antagonists,		/*shows all antags*/
-	/client/proc/deadchat				/*toggles deadchat on/off*/
+	/client/proc/check_antagonists		/*shows all antags*/
+//	/client/proc/deadchat				/*toggles deadchat on/off*/
 	)
 var/list/admin_verbs_admin = list(
 	/client/proc/player_panel,			/*shows an interface for all players, with links to various panels (old style)*/
@@ -68,10 +68,8 @@ var/list/admin_verbs_admin = list(
 	/datum/admins/proc/show_skills,
 	/client/proc/check_customitem_activity,
 	/client/proc/man_up,
-	/client/proc/global_man_up
-	/* Currently unticked.
-	/client/proc/response_team
-	*/
+	/client/proc/global_man_up,
+	/client/proc/response_team // Response Teams admin verb
 )
 var/list/admin_verbs_ban = list(
 	/client/proc/unban_panel,
@@ -158,7 +156,7 @@ var/list/admin_verbs_rejuv = list(
 var/list/admin_verbs_hideable = list(
 	/client/proc/set_ooc,
 	/client/proc/deadmin_self,
-	/client/proc/deadchat,
+//	/client/proc/deadchat,
 	/client/proc/toggleprayers,
 	/client/proc/toggle_hear_radio,
 	/datum/admins/proc/show_traitor_panel,
@@ -356,13 +354,13 @@ var/list/admin_verbs_mod = list(
 			mob.invisibility = initial(mob.invisibility)
 			mob << "\red <b>Invisimin off. Invisibility reset.</b>"
 			mob.icon_state = "ghost"
-			mob.icon = 'human.dmi'
+			mob.icon = 'icons/mob/human.dmi'
 			mob.update_icons()
 		else
 			mob.invisibility = INVISIBILITY_OBSERVER
 			mob << "\blue <b>Invisimin on. You are now as invisible as a ghost.</b>"
 			mob.icon_state = "ghost"
-			mob.icon = 'mob.dmi'
+			mob.icon = 'icons/mob/mob.dmi'
 
 
 /client/proc/player_panel()
@@ -651,7 +649,7 @@ var/list/admin_verbs_mod = list(
 	if(!istype(M, /mob/living/carbon/human))
 		usr << "\red You can only do this to humans!"
 		return
-	switch(alert("Are you sure you wish to edit this mob's appearance? Skrell, Unathi, Vox, Kida, and Tajara can result in unintended consequences.",,"Yes","No"))
+	switch(alert("Are you sure you wish to edit this mob's appearance? Skrell, Unathi, Vox and Tajaran can result in unintended consequences.",,"Yes","No"))
 		if("No")
 			return
 	var/new_facial = input("Please select facial hair color.", "Character Generation") as color

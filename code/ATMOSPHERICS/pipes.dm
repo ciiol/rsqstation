@@ -186,7 +186,7 @@ obj/machinery/atmospherics/pipe
 		update_icon()
 			if(node1&&node2)
 				var/C = ""
-				switch(color)
+				switch(pipe_color)
 					if ("red") C = "-r"
 					if ("blue") C = "-b"
 					if ("cyan") C = "-c"
@@ -252,22 +252,22 @@ obj/machinery/atmospherics/pipe
 
 	simple/scrubbers
 		name="Scrubbers pipe"
-		color="red"
+		pipe_color="red"
 		icon_state = ""
 
 	simple/supply
 		name="Air supply pipe"
-		color="blue"
+		pipe_color="blue"
 		icon_state = ""
 
 	simple/supplymain
 		name="Main air supply pipe"
-		color="purple"
+		pipe_color="purple"
 		icon_state = ""
 
 	simple/general
 		name="Pipe"
-		color=""
+		pipe_color=""
 		icon_state = ""
 
 	simple/scrubbers/visible
@@ -304,7 +304,7 @@ obj/machinery/atmospherics/pipe
 
 	simple/yellow
 		name="Pipe"
-		color="yellow"
+		pipe_color="yellow"
 		icon_state = ""
 
 	simple/yellow/visible
@@ -698,7 +698,7 @@ obj/machinery/atmospherics/pipe
 		update_icon()
 			if(node1&&node2&&node3)
 				var/C = ""
-				switch(color)
+				switch(pipe_color)
 					if ("red") C = "-r"
 					if ("blue") C = "-b"
 					if ("cyan") C = "-c"
@@ -770,27 +770,27 @@ obj/machinery/atmospherics/pipe
 
 	manifold/scrubbers
 		name="Scrubbers pipe"
-		color="red"
+		pipe_color="red"
 		icon_state = ""
 
 	manifold/supply
 		name="Air supply pipe"
-		color="blue"
+		pipe_color="blue"
 		icon_state = ""
 
 	manifold/supplymain
 		name="Main air supply pipe"
-		color="purple"
+		pipe_color="purple"
 		icon_state = ""
 
 	manifold/general
 		name="Air supply pipe"
-		color="gray"
+		pipe_color="gray"
 		icon_state = ""
 
 	manifold/yellow
 		name="Air supply pipe"
-		color="yellow"
+		pipe_color="yellow"
 		icon_state = ""
 
 	manifold/scrubbers/visible
@@ -923,9 +923,10 @@ obj/machinery/atmospherics/pipe
 			..()
 
 		update_icon()
+			overlays.Cut()
 			if(node1&&node2&&node3&&node4)
 				var/C = ""
-				switch(color)
+				switch(pipe_color)
 					if ("red") C = "-r"
 					if ("blue") C = "-b"
 					if ("cyan") C = "-c"
@@ -936,7 +937,7 @@ obj/machinery/atmospherics/pipe
 
 			else
 				icon_state = "manifold4w_ex"
-				var/icon/con = new/icon('pipe_manifold.dmi',"manifold4w_con") //Since 4-ways are supposed to be directionless, they need an overlay instead it seems.
+				var/icon/con = new/icon('icons/obj/atmospherics/pipe_manifold.dmi',"manifold4w_con") //Since 4-ways are supposed to be directionless, they need an overlay instead it seems.
 
 				if(node1)
 					overlays += new/image(con,dir=1)
@@ -980,22 +981,22 @@ obj/machinery/atmospherics/pipe
 
 	manifold4w/scrubbers
 		name="Scrubbers pipe"
-		color="red"
+		pipe_color="red"
 		icon_state = ""
 
 	manifold4w/supply
 		name="Air supply pipe"
-		color="blue"
+		pipe_color="blue"
 		icon_state = ""
 
 	manifold4w/supplymain
 		name="Main air supply pipe"
-		color="purple"
+		pipe_color="purple"
 		icon_state = ""
 
 	manifold4w/general
 		name="Air supply pipe"
-		color="gray"
+		pipe_color="gray"
 		icon_state = ""
 
 	manifold4w/scrubbers/visible
@@ -1033,7 +1034,7 @@ obj/machinery/atmospherics/pipe
 	cap
 		name = "pipe endcap"
 		desc = "An endcap for pipes"
-		icon = 'pipes.dmi'
+		icon = 'icons/obj/pipes.dmi'
 		icon_state = "cap"
 		level = 2
 		layer = 2.4 //under wires with their 2.44
@@ -1118,26 +1119,7 @@ obj/machinery/atmospherics/pipe/attackby(var/obj/item/weapon/W as obj, var/mob/u
 	if (istype(src, /obj/machinery/atmospherics/pipe/vent))
 		return ..()
 
-	// ===== Handle paints =====
-	if(istype(W, /obj/item/weapon/reagent_containers/glass/paint/red))
-		src.color = "red"
-		user << "\red You paint the pipe red."
-		update_icon()
-		return 1
-	if(istype(W, /obj/item/weapon/reagent_containers/glass/paint/blue))
-		src.color = "blue"
-		user << "\red You paint the pipe blue."
-		update_icon()
-		return 1
-	if(istype(W, /obj/item/weapon/reagent_containers/glass/paint/green))
-		src.color = "green"
-		user << "\red You paint the pipe green."
-		update_icon()
-		return 1
-	if(istype(W, /obj/item/weapon/reagent_containers/glass/paint/yellow))
-		src.color = "yellow"
-		user << "\red You paint the pipe yellow."
-		update_icon()
+	if(istype(W,/obj/item/device/pipe_painter))
 		return 1
 
 	if (!istype(W, /obj/item/weapon/wrench))
